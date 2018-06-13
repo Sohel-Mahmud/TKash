@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#00796b</color>
+    <color name="colorAccent">#1de9b6</color>
+
+    <color name="LoginColor">@color/colorAccent</color>
+    <color name="rippleEffectColor">#f816a463</color>
+    <color name="errorcolor">#F44336</color>
+
+    <color name="green">#1de9b6</color>
+    <color name="green_dark">#009688</color>
+</resources>
