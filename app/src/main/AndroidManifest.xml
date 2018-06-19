@@ -28,10 +28,12 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LoginActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity android:name=".TaskActivity"
-            android:label="@string/task_activity">
-        </activity>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TaskActivity"
+            android:label="@string/task_activity" />
+        <activity android:name=".TaskDetailsActivity" />
+        <activity android:name=".TaskProcess"></activity>
     </application>
 
 </manifest>

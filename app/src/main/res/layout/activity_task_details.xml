@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TaskDetailsActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0">
+
+                <com.budiyev.android.circularprogressbar.CircularProgressBar
+                    android:id="@+id/progressBarImpression"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    app:animateProgress="true"
+                    app:backgroundStrokeColor="#FF4081"
+                    app:backgroundStrokeWidth="5dp"
+                    app:drawBackgroundStroke="true"
+                    app:foregroundStrokeCap="butt"
+                    app:foregroundStrokeColor="#0488d1"
+                    app:foregroundStrokeWidth="20dp"
+                    app:indeterminate="false"
+                    app:indeterminateMinimumAngle="45.0"
+                    app:indeterminateRotationAnimationDuration="1200"
+                    app:indeterminateSweepAnimationDuration="600"
+                    app:maximum="20"
+                    app:progressAnimationDuration="100"
+                    app:startAngle="90.0" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/txtImpression"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:text="0/20"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="25dp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:text="Impressions"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14dp" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0">
+
+                <com.budiyev.android.circularprogressbar.CircularProgressBar
+                    android:id="@+id/progressBarClicks"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    app:animateProgress="true"
+                    app:backgroundStrokeColor="#FF4081"
+                    app:backgroundStrokeWidth="5dp"
+                    app:drawBackgroundStroke="true"
+                    app:foregroundStrokeCap="butt"
+                    app:foregroundStrokeColor="#0488d1"
+                    app:foregroundStrokeWidth="20dp"
+                    app:indeterminate="false"
+                    app:indeterminateMinimumAngle="45.0"
+                    app:indeterminateRotationAnimationDuration="1200"
+                    app:indeterminateSweepAnimationDuration="600"
+                    app:maximum="1"
+                    app:progressAnimationDuration="100"
+                    app:startAngle="90.0" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/txtClicks"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:text="0/1"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="25sp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+
+                        <TextView
+                            android:id="@+id/lblClicks"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:text="Clicks"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14sp" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <!--<RelativeLayout-->
+        <!--android:layout_width="UNKNOWN_DATA_0x8c01"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="left|right|center_horizontal|fill_horizontal|center|fill|start|end"-->
+        <!--android:layout_marginLeft="10dp"-->
+        <!--android:layout_marginRight="10dp"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:background="@drawable/dotted_border"-->
+        <!--android:padding="10dp">-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/tvTimer"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginLeft="10dp"-->
+        <!--android:layout_marginRight="10dp"-->
+        <!--android:text="10"-->
+        <!--android:textColor="@color/colorPrimary"-->
+        <!--android:textSize="50dp"-->
+        <!--android:textStyle="bold" />-->
+        <!--</RelativeLayout>-->
+
+        <Button
+            android:id="@+id/btn_proceed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="left|right|center_horizontal|fill_horizontal|center|fill|start|end"
+            android:paddingBottom="10dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="10dp"
+            android:elevation="10dp"
+            android:text="Click to Proceed"
+            android:textColor="@android:color/white"
+            android:background="@color/colorAccent"
+            android:textStyle="bold" />
+        <!--android:background="@drawable/btn_bg_filled"-->
+        <!--style="?unknown_attr_ref: 1010042" -->
+        />
+    </RelativeLayout>
+    <!--<com.google.android.gms.ads.AdView android:id="@+id/adView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" android:adSize="BANNER" android:adUnitId="@string/banner_home_footer" />-->
+</android.support.constraint.ConstraintLayout>

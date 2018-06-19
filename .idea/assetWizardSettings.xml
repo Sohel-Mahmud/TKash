@@ -95,7 +95,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_done_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/av/ic_slow_motion_video_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -105,7 +105,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_done" />
+                            <entry key="opacityPercent" value="75" />
+                            <entry key="outputName" value="ic_video" />
                             <entry key="sourceFile" value="C:\Users\USER" />
                           </map>
                         </option>
