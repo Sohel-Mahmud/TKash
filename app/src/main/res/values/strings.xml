@@ -9,4 +9,13 @@
     <string name="action_settings">Settings</string>
     <string name="verification_reminder">A verification Code will be sent to your Phone Number</string>
     <string name="task_activity">Tasks</string>
+    <string name="admobAppId">ca-app-pub-6933215864400428~4652650981</string>
+    <string name="firstBannerAdUnitId">ca-app-pub-6933215864400428/4107448398</string>
+    <string name="BannerTestAdUnitId">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="secondBannerAdUnitId">ca-app-pub-6933215864400428/6909763172</string>
+    <string name="testDeviceId">2C750EBF11C8D60CC8D31D18C832AFEB</string>
+    <string name="testDeviceEmulator">0E191E02CED02D02AF60A59956D2C82A</string>
+    <string name="InterstitialTask">ca-app-pub-6933215864400428/9385795425</string>
+    <string name="InterstitialTest">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="InerstitialTestVideo">ca-app-pub-3940256099942544/8691691433</string>
 </resources>

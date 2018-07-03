@@ -25,6 +25,7 @@ import com.devlearn.sohel.tkash.Models.UserDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -88,7 +89,36 @@ public class LoginActivity extends AppCompatActivity {
         rootlayout = (RelativeLayout)findViewById(R.id.rootlayout);
 
         mAuth = FirebaseAuth.getInstance();
-        mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users");
+
+        mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            @Override
+            public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+                signInWithPhoneAuthCredential(phoneAuthCredential);
+            }
+
+            @Override
+            public void onVerificationFailed(FirebaseException e) {
+                String error = e.getMessage();
+                Snackbar.make(rootlayout, "Error "+e, Snackbar.LENGTH_LONG)
+                        .show();
+                Log.d("Error fire",error);
+            }
+
+            @Override
+            public void onCodeSent(String verificationId,
+                                   PhoneAuthProvider.ForceResendingToken token) {
+                // The SMS verification code has been sent to the provided phone number, we
+                // now need to ask the user to enter the code and then construct a credential
+                // by combining the code with a verification ID.
+                // Save verification ID and resending token so we can use them later
+                mVerificationId = verificationId;
+                mResendToken = token;
+
+//                progressBar.setVisibility(View.INVISIBLE);
+
+                // ...
+            }
+        };
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,35 +141,7 @@ public class LoginActivity extends AppCompatActivity {
                 {
                     phoneNumber = edtPhone.getText().toString();
 
-                    mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-                        @Override
-                        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-                            signInWithPhoneAuthCredential(phoneAuthCredential);
-                        }
 
-                        @Override
-                        public void onVerificationFailed(FirebaseException e) {
-                            String error = e.getMessage();
-                            Snackbar.make(rootlayout, "Error "+e, Snackbar.LENGTH_LONG)
-                                    .show();
-                            Log.d("Error fire",error);
-                        }
-
-                        @Override
-                        public void onCodeSent(String verificationId,
-                                               PhoneAuthProvider.ForceResendingToken token) {
-                            // The SMS verification code has been sent to the provided phone number, we
-                            // now need to ask the user to enter the code and then construct a credential
-                            // by combining the code with a verification ID.
-                            // Save verification ID and resending token so we can use them later
-                            mVerificationId = verificationId;
-                            mResendToken = token;
-
-//                progressBar.setVisibility(View.INVISIBLE);
-
-                            // ...
-                        }
-                    };
                     PhoneAuthProvider.getInstance().verifyPhoneNumber(
                             phoneNumber,
                             60,
@@ -153,6 +155,19 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser CurrentUser = mAuth.getCurrentUser();
+        if(CurrentUser != null)
+        {
+            startActivity(new Intent(LoginActivity.this,MainActivity.class));
+            finish();
+
+        }
     }
 
     private void LoginUisngPhone() {
@@ -264,6 +279,7 @@ public class LoginActivity extends AppCompatActivity {
         if(mAuth.getCurrentUser()!=null)
         {
             final String user_id = mAuth.getCurrentUser().getUid();
+            mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users");
 
             mDatabaseUsers.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -281,6 +297,7 @@ public class LoginActivity extends AppCompatActivity {
 //                        Intent intent = new Intent(LoginActivity.this,AccountSetupActivity.class);
 //                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //                        startActivity(intent);
+
                         mDatabaseUsers.child(user_id).child("userName").setValue(userName);
                         mDatabaseUsers.child(user_id).child("userPhone").setValue(phoneNumber);
                         mDatabaseUsers.child(user_id).child("currentBalance").setValue(0.0);

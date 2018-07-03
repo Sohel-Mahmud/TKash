@@ -2,6 +2,7 @@ package com.devlearn.sohel.tkash;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -29,14 +30,27 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devlearn.sohel.tkash.Models.UpdateLink;
 import com.devlearn.sohel.tkash.Models.UserDetails;
+import com.devlearn.sohel.tkash.Models.WithdrawListDetails;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
 
@@ -46,12 +60,12 @@ public class MainActivity extends AppCompatActivity
     android.support.v7.widget.GridLayout mainGrid;
 
     TextView txtusername, txtcurrentBalance, txtTotalbalance;
-    double currentbalance, totalbalance;
+    private double currentBalance, totalBalance;
 
     String username;
     public String user_id;
 
-    private String numberProvider, number_Type, withdrawNumber;
+    private String numberProvider,withdrawStatus, withdrawNumber;
     private int selectedId = -1;
     private int selectedId2 = -1;
     private double withdrawAmount;
@@ -61,7 +75,9 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseUserDetails;
     private DatabaseReference mDatabaseTask;
+    private DatabaseReference mDatabaseWithdraw;
 
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,17 +86,31 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        MobileAds.initialize(this, String.valueOf(R.string.admobAppId));
+
+
         mAuth = FirebaseAuth.getInstance();
         user_id = mAuth.getCurrentUser().getUid();
         mDatabaseUserDetails = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
         mDatabaseUserDetails.keepSynced(true);
         mDatabaseTask = FirebaseDatabase.getInstance().getReference().child("Tasks");
+        mDatabaseWithdraw = FirebaseDatabase.getInstance().getReference().child("Withdraws").child(user_id);
 
         txtusername = (TextView)findViewById(R.id.username);
         txtcurrentBalance = (TextView)findViewById(R.id.currentBalance);
         txtTotalbalance = (TextView)findViewById(R.id.totalbalance);
 
         mainGrid = (android.support.v7.widget.GridLayout)findViewById(R.id.mainGrid);
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+//                .addTestDevice("2C750EBF11C8D60CC8D31D18C832AFEB")
+                .build();
+        mAdView.loadAd(adRequest);
+        if(adRequest.isTestDevice(this)){
+            Toast.makeText(this, "Its a test device", Toast.LENGTH_SHORT).show();
+            Log.d("test device", "onCreate: test device running ");
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -94,26 +124,7 @@ public class MainActivity extends AppCompatActivity
         //set event for gridview
         setSingleEvent(mainGrid);
 
-        mDatabaseUserDetails.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                UserDetails userDetails = dataSnapshot.getValue(UserDetails.class);
-                username = userDetails.getUserName();
-                txtusername.setText(username);
-                txtcurrentBalance.setText(userDetails.getCurrentBalance().toString());
-                txtTotalbalance.setText(userDetails.getTotalBalance().toString());
-                Log.d("username","error: "+username);
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                String error = databaseError.getMessage();
-                Toast.makeText(MainActivity.this, "Error "+error, Toast.LENGTH_SHORT).show();
-                Log.d("username error","error: "+error);
-            }
-        });
 
     }
 
@@ -135,6 +146,10 @@ public class MainActivity extends AppCompatActivity
                         startActivity(new Intent(MainActivity.this, TaskActivity.class));
 
                     }
+                    else if(finalI == 2)
+                    {
+                        startActivity(new Intent(MainActivity.this, WithdrawHistoryActivity.class));
+                    }
                     else if(finalI == 3)
                     {
                         alertDialog();
@@ -154,7 +169,6 @@ public class MainActivity extends AppCompatActivity
         LayoutInflater inflater = LayoutInflater.from(this);
         View layout_withdraw = inflater.inflate(R.layout.layout_withdraw, null);
         final RadioGroup radioProvider = layout_withdraw.findViewById(R.id.radioProvider);
-        final RadioGroup radioNumberType = layout_withdraw.findViewById(R.id.radioNumberType);
         final EditText edtWithdrawNumber = layout_withdraw.findViewById(R.id.edtWithdrawNumber);
         final EditText edtWithdrawAmount = layout_withdraw.findViewById(R.id.edtWithdrawAmount);
 //        final RadioButton radioBkash = layout_withdraw.findViewById(R.id.bkash);
@@ -170,18 +184,15 @@ public class MainActivity extends AppCompatActivity
                 selectedId = radioProvider.getCheckedRadioButtonId();
                 RadioButton provider = radioProvider.findViewById(selectedId);
 
-                selectedId2 = radioNumberType.getCheckedRadioButtonId();
-                RadioButton numberType = radioNumberType.findViewById(selectedId2);
 
-                if((selectedId != -1) && (selectedId2 != -1) && (!TextUtils.isEmpty(edtWithdrawNumber.getText().toString())) && (!TextUtils.isEmpty(edtWithdrawAmount.getText().toString())))
+                if((selectedId != -1) && (!TextUtils.isEmpty(edtWithdrawNumber.getText().toString())) && (!TextUtils.isEmpty(edtWithdrawAmount.getText().toString())))
                 {
                     numberProvider = provider.getText().toString();
-                    number_Type = numberType.getText().toString();
                     withdrawNumber = edtWithdrawNumber.getText().toString();
                     withdrawAmount = Double.valueOf(edtWithdrawAmount.getText().toString());
 
-                    Toast.makeText(MainActivity.this, "Success!!"+numberProvider+" "+number_Type+" "+withdrawNumber+selectedId+" "+selectedId2+"Amount "+withdrawAmount, Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(MainActivity.this, "Success!!"+numberProvider+" "+withdrawNumber+selectedId+" "+selectedId2+"Amount "+withdrawAmount, Toast.LENGTH_SHORT).show();
+                    postWithdrawRequest(numberProvider, withdrawNumber, withdrawAmount);
                 }
                 else
                 {
@@ -202,13 +213,93 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    private void postWithdrawRequest(String numberProvider, String withdrawNumber, double withdrawAmount) {
+
+        if((numberProvider.equals("Mobile Recharge")) && (currentBalance>= withdrawAmount) && (withdrawAmount >=50))
+        {
+            Toast.makeText(this, "Correct withdraw", Toast.LENGTH_SHORT).show();
+            waitingDialog = new SpotsDialog(MainActivity.this);
+            waitingDialog.show();
+
+            withdrawStatus = "Pending";
+
+            WithdrawListDetails withdraw = new WithdrawListDetails(numberProvider, withdrawNumber, withdrawStatus, withdrawAmount);
+
+            double newCurrentBalace = currentBalance - withdrawAmount;
+            mDatabaseUserDetails.child("currentBalance").setValue(newCurrentBalace);
+
+            final DatabaseReference newPost = mDatabaseWithdraw.push();
+
+            newPost.setValue(withdraw).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    waitingDialog.dismiss();
+                    startActivity(new Intent(MainActivity.this, WithdrawHistoryActivity.class));
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    waitingDialog.dismiss();
+                    String error = e.getMessage();
+                    Toast.makeText(MainActivity.this, "Error! "+error, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+
+        else if((numberProvider.equals("bKash") || numberProvider.equals("Rocket")) && (currentBalance>= withdrawAmount) && (withdrawAmount >=200))
+        {
+            Toast.makeText(this, "Correct withdraw", Toast.LENGTH_SHORT).show();
+            waitingDialog = new SpotsDialog(MainActivity.this);
+            waitingDialog.show();
+
+            withdrawStatus = "Pending";
+
+            WithdrawListDetails withdraw = new WithdrawListDetails(numberProvider, withdrawNumber, withdrawStatus, withdrawAmount);
+
+            double newCurrentBalace = currentBalance - withdrawAmount;
+            mDatabaseUserDetails.child("currentBalance").setValue(newCurrentBalace);
+
+            final DatabaseReference newPost = mDatabaseWithdraw.push();
+
+            newPost.setValue(withdraw).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                waitingDialog.dismiss();
+                startActivity(new Intent(MainActivity.this, WithdrawHistoryActivity.class));
+
+            }
+            }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        waitingDialog.dismiss();
+                        String error = e.getMessage();
+                        Toast.makeText(MainActivity.this, "Error! "+error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        }
+        else
+        {
+//            waitingDialog.dismiss();
+//            startActivity(new Intent(MainActivity.this, WithdrawHistoryActivity.class));
+//            finish();
+
+//            waitingDialog.dismiss();
+//            String error  = task.getException().getMessage();
+//            Toast.makeText(MainActivity.this, "Error! "+error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Your can Recharge 50+tk and bkash, rocket 200+tk!", Toast.LENGTH_LONG).show();
+        }
+    }
+
     private void checkTaskAvailability() {
 
         //dot waitng process
         waitingDialog = new SpotsDialog(MainActivity.this);
         waitingDialog.show();
 
-        mDatabaseTask.addValueEventListener(new ValueEventListener() {
+        ValueEventListener mValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.hasChild(user_id))
@@ -219,13 +310,64 @@ public class MainActivity extends AppCompatActivity
                 }
                 else
                 {
-                    mDatabaseTask.child(user_id).child("task1").child("impressions").setValue(0);
-                    mDatabaseTask.child(user_id).child("task1").child("clicks").setValue(0);
-                    mDatabaseTask.child(user_id).child("task2").child("impressions").setValue(0);
-                    mDatabaseTask.child(user_id).child("task2").child("clicks").setValue(0);
-                    Toast.makeText(MainActivity.this, "Success!!", Toast.LENGTH_LONG).show();
+                    Map<String, Object> task1 = new HashMap<>();
+                    Map<String, Object> task2 = new HashMap<>();
+                    Map<String, Object> task3 = new HashMap<>();
+                    Map<String, Object> task4 = new HashMap<>();
+                    Map<String, Object> task5 = new HashMap<>();
+                    task1.put("impressions",0);
+                    task1.put("clicks",0);
+                    task1.put("timestamp", ServerValue.TIMESTAMP);
+                    task1.put("status", "Running");
+
+                    task2.put("impressions",0);
+                    task2.put("clicks",0);
+                    task2.put("timestamp", ServerValue.TIMESTAMP);
+                    task2.put("status", "Running");
+
+
+                    task3.put("impressions",0);
+                    task3.put("clicks",0);
+                    task3.put("timestamp", ServerValue.TIMESTAMP);
+                    task3.put("status", "Running");
+
+
+                    task4.put("impressions",0);
+                    task4.put("clicks",0);
+                    task4.put("timestamp", ServerValue.TIMESTAMP);
+                    task4.put("status", "Running");
+
+
+                    task5.put("impressions",0);
+                    task5.put("clicks",0);
+                    task5.put("timestamp", ServerValue.TIMESTAMP);
+                    task5.put("status", "Running");
+
+                    mDatabaseTask.child(user_id).child("task1").setValue(task1);
+                    mDatabaseTask.child(user_id).child("task2").setValue(task2);
+                    mDatabaseTask.child(user_id).child("task3").setValue(task3);
+                    mDatabaseTask.child(user_id).child("task4").setValue(task4);
+                    mDatabaseTask.child(user_id).child("task5").setValue(task5);
                     waitingDialog.dismiss();
-                    startActivity(new Intent(MainActivity.this, TaskActivity.class));
+
+
+//                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                        @Override
+//                        public void onSuccess(Void aVoid) {
+//                            Toast.makeText(MainActivity.this, "Success!!!", Toast.LENGTH_LONG).show();
+//                            waitingDialog.dismiss();
+//                            startActivity(new Intent(MainActivity.this, TaskActivity.class));
+//                        }
+//                    }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//
+//                            waitingDialog.dismiss();
+//                            String error  = e.getMessage();
+//                            Log.d("taskloaderror","eror"+error);
+//                            Toast.makeText(MainActivity.this, "Failed loading tasks! "+error, Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
                 }
             }
 
@@ -234,20 +376,106 @@ public class MainActivity extends AppCompatActivity
                 String error = databaseError.getMessage();
                 Log.d("taskerror","error "+error);
             }
-        });
+        };
+        mDatabaseTask.addListenerForSingleValueEvent(mValueEventListener);
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-//        FirebaseUser CurrentUser = mAuth.getCurrentUser();
-//        if(CurrentUser == null)
-//        {
-//            startActivity(new Intent(MainActivity.this,LoginActivity.class));
-//            finish();
-//
-//        }
+        try{
+            mDatabaseUserDetails.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    UserDetails userDetails = dataSnapshot.getValue(UserDetails.class);
+                    username = userDetails.getUserName();
+                    currentBalance = userDetails.getCurrentBalance();
+                    txtusername.setText(username);
+                    txtcurrentBalance.setText(userDetails.getCurrentBalance().toString());
+                    txtTotalbalance.setText(userDetails.getTotalBalance().toString());
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    String error = databaseError.getMessage();
+                    Toast.makeText(MainActivity.this, "userdetailserror "+error, Toast.LENGTH_SHORT).show();
+                    Log.d("username error","error: "+error);
+                }
+            });
+        }catch (Exception e)
+        {
+            Log.d("username error","error: "+e.getMessage());
+
+        }
+        try{
+            DatabaseReference updateCheck = FirebaseDatabase.getInstance().getReference().child("UpdateFile");
+            updateCheck.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    UpdateLink updateLink = dataSnapshot.getValue(UpdateLink.class);
+                    double version = updateLink.getVersion();
+                    String url = updateLink.getUrl();
+
+                    if(version != 0.5)
+                    {
+                        AlertForUpdate(url);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }catch (Exception e)
+        {
+            Toast.makeText(this, "UpdateError"+ e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void AlertForUpdate(final String url) {
+
+        AlertDialog.Builder updateDialog = new AlertDialog.Builder(this);
+        updateDialog.setTitle("Update Available");
+        updateDialog.setCancelable(false);
+        updateDialog.setMessage("Good news! there is an update for your app, please update to proceed!!")
+                .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        startActivity(browserIntent);
+                    }
+                });
+        updateDialog.show();
+
+    }
+
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 
 

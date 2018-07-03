@@ -41,7 +41,7 @@
                     app:indeterminateMinimumAngle="45.0"
                     app:indeterminateRotationAnimationDuration="1200"
                     app:indeterminateSweepAnimationDuration="600"
-                    app:maximum="20"
+                    app:maximum="24"
                     app:progressAnimationDuration="100"
                     app:startAngle="90.0" />
 
@@ -61,7 +61,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
-                            android:text="0/20"
+                            android:text="0/24"
                             android:textColor="@color/colorPrimary"
                             android:textSize="25dp"
                             android:textStyle="bold" />
@@ -188,9 +188,28 @@
             android:textColor="@android:color/white"
             android:background="@color/colorAccent"
             android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnReset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="180dp"
+            android:text="Reset" />
         <!--android:background="@drawable/btn_bg_filled"-->
         <!--style="?unknown_attr_ref: 1010042" -->
         />
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adViewInTask"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/BannerTestAdUnitId">
+        </com.google.android.gms.ads.AdView>
     </RelativeLayout>
     <!--<com.google.android.gms.ads.AdView android:id="@+id/adView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" android:adSize="BANNER" android:adUnitId="@string/banner_home_footer" />-->
 </android.support.constraint.ConstraintLayout>
