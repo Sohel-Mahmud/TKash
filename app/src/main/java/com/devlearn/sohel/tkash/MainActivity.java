@@ -59,10 +59,12 @@ public class MainActivity extends AppCompatActivity
 
     android.support.v7.widget.GridLayout mainGrid;
 
-    TextView txtusername, txtcurrentBalance, txtTotalbalance;
+    TextView txtusername, txtcurrentBalance, txtTotalbalance, txtuserNumber;
     private double currentBalance, totalBalance;
 
-    String username;
+    private TextView marque;
+
+    private String username, usernumber;
     public String user_id;
 
     private String numberProvider,withdrawStatus, withdrawNumber;
@@ -76,6 +78,7 @@ public class MainActivity extends AppCompatActivity
     private DatabaseReference mDatabaseUserDetails;
     private DatabaseReference mDatabaseTask;
     private DatabaseReference mDatabaseWithdraw;
+    private DatabaseReference mDatabaseWelcome;
 
     private AdView mAdView;
 
@@ -86,7 +89,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        MobileAds.initialize(this, String.valueOf(R.string.admobAppId));
+        MobileAds.initialize(this, String.valueOf(R.string.admobTestId));
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -95,16 +98,20 @@ public class MainActivity extends AppCompatActivity
         mDatabaseUserDetails.keepSynced(true);
         mDatabaseTask = FirebaseDatabase.getInstance().getReference().child("Tasks");
         mDatabaseWithdraw = FirebaseDatabase.getInstance().getReference().child("Withdraws").child(user_id);
+        mDatabaseWelcome = FirebaseDatabase.getInstance().getReference().child("WelcomeText").child("text");
 
         txtusername = (TextView)findViewById(R.id.username);
+        txtuserNumber = findViewById(R.id.userNumber);
         txtcurrentBalance = (TextView)findViewById(R.id.currentBalance);
         txtTotalbalance = (TextView)findViewById(R.id.totalbalance);
+        marque = findViewById(R.id.bannerMarque);
+        marque.setSelected(true);
 
         mainGrid = (android.support.v7.widget.GridLayout)findViewById(R.id.mainGrid);
 
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
-//                .addTestDevice("2C750EBF11C8D60CC8D31D18C832AFEB")
+                .addTestDevice("2C750EBF11C8D60CC8D31D18C832AFEB")
                 .build();
         mAdView.loadAd(adRequest);
         if(adRequest.isTestDevice(this)){
@@ -154,11 +161,31 @@ public class MainActivity extends AppCompatActivity
                     {
                         alertDialog();
                     }
+                    else if(finalI == 0)
+                    {
+                        infoDetailsAlertDialog();
+                    }
 
                     Toast.makeText(MainActivity.this, "Clicked"+ finalI, Toast.LENGTH_SHORT).show();
                 }
             });
         }
+    }
+
+    private void infoDetailsAlertDialog() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Informaions");
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View layout_information = inflater.inflate(R.layout.layout_information,null);
+        dialog.setView(layout_information);
+        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     private void alertDialog() {
@@ -248,7 +275,7 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        else if((numberProvider.equals("bKash") || numberProvider.equals("Rocket")) && (currentBalance>= withdrawAmount) && (withdrawAmount >=200))
+        else if((numberProvider.equals("bKash") || numberProvider.equals("Rocket")) && (currentBalance>= withdrawAmount) && (withdrawAmount >=105))
         {
             Toast.makeText(this, "Correct withdraw", Toast.LENGTH_SHORT).show();
             waitingDialog = new SpotsDialog(MainActivity.this);
@@ -315,31 +342,31 @@ public class MainActivity extends AppCompatActivity
                     Map<String, Object> task3 = new HashMap<>();
                     Map<String, Object> task4 = new HashMap<>();
                     Map<String, Object> task5 = new HashMap<>();
-                    task1.put("impressions",0);
-                    task1.put("clicks",0);
+                    task1.put("imp",0);
+                    task1.put("clks",0);
                     task1.put("timestamp", ServerValue.TIMESTAMP);
                     task1.put("status", "Running");
 
-                    task2.put("impressions",0);
-                    task2.put("clicks",0);
+                    task2.put("imp",0);
+                    task2.put("clks",0);
                     task2.put("timestamp", ServerValue.TIMESTAMP);
                     task2.put("status", "Running");
 
 
-                    task3.put("impressions",0);
-                    task3.put("clicks",0);
+                    task3.put("imp",0);
+                    task3.put("clks",0);
                     task3.put("timestamp", ServerValue.TIMESTAMP);
                     task3.put("status", "Running");
 
 
-                    task4.put("impressions",0);
-                    task4.put("clicks",0);
+                    task4.put("imp",0);
+                    task4.put("clks",0);
                     task4.put("timestamp", ServerValue.TIMESTAMP);
                     task4.put("status", "Running");
 
 
-                    task5.put("impressions",0);
-                    task5.put("clicks",0);
+                    task5.put("imp",0);
+                    task5.put("clks",0);
                     task5.put("timestamp", ServerValue.TIMESTAMP);
                     task5.put("status", "Running");
 
@@ -385,13 +412,35 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         try{
+
+            mDatabaseWelcome.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String emote = String.valueOf(Character.toChars(0x1F609));
+                    String text = (String) dataSnapshot.getValue();
+                    marque.setText(text+" "+emote);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        }catch (Exception e)
+        {
+
+        }
+        try{
             mDatabaseUserDetails.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     UserDetails userDetails = dataSnapshot.getValue(UserDetails.class);
                     username = userDetails.getUserName();
+                    usernumber = userDetails.getUserPhone();
                     currentBalance = userDetails.getCurrentBalance();
                     txtusername.setText(username);
+                    txtuserNumber.setText(usernumber);
                     txtcurrentBalance.setText(userDetails.getCurrentBalance().toString());
                     txtTotalbalance.setText(userDetails.getTotalBalance().toString());
 
@@ -498,8 +547,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
+        // Handle action bar item clks here. The action bar will
+        // automatically handle clks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
@@ -514,7 +563,7 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        // Handle navigation view item clks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {

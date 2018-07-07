@@ -211,8 +211,8 @@ public class TaskActivity extends AppCompatActivity {
 //                    int imp = Integer.valueOf(task1.getImpressions());
 //                    Log.d("impression","i="+imp);
 
-                int impressions = task1.getImpressions();
-                int clicks = task1.getClicks();
+                int impressions = task1.getimp();
+                int clicks = task1.getclks();
                 long timestamp = task1.getTimestamp();
                     Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
                     intent.putExtra("task","task1");
@@ -241,8 +241,8 @@ public class TaskActivity extends AppCompatActivity {
 //                    taskone.setText(String.valueOf(task1.getImpressions()));
 //                    int imp = Integer.valueOf(task1.getImpressions());
 //                    Log.d("impression","i="+imp);
-                int impressions = task2.getImpressions();
-                int clicks = task2.getClicks();
+                int impressions = task2.getimp();
+                int clicks = task2.getclks();
                 long timestamp = task2.getTimestamp();
 
                     Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
@@ -271,8 +271,8 @@ public class TaskActivity extends AppCompatActivity {
 //                    taskone.setText(String.valueOf(task1.getImpressions()));
 //                    int imp = Integer.valueOf(task1.getImpressions());
 //                    Log.d("impression","i="+imp);
-                int impressions = task3.getImpressions();
-                int clicks = task3.getClicks();
+                int impressions = task3.getimp();
+                int clicks = task3.getclks();
                 long timestamp = task3.getTimestamp();
 
                 Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
@@ -301,8 +301,8 @@ public class TaskActivity extends AppCompatActivity {
 //                    taskone.setText(String.valueOf(task1.getImpressions()));
 //                    int imp = Integer.valueOf(task1.getImpressions());
 //                    Log.d("impression","i="+imp);
-                int impressions = task4.getImpressions();
-                int clicks = task4.getClicks();
+                int impressions = task4.getimp();
+                int clicks = task4.getclks();
                 long timestamp = task4.getTimestamp();
 
                 Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
@@ -331,8 +331,8 @@ public class TaskActivity extends AppCompatActivity {
 //                    taskone.setText(String.valueOf(task1.getImpressions()));
 //                    int imp = Integer.valueOf(task1.getImpressions());
 //                    Log.d("impression","i="+imp);
-                int impressions = task5.getImpressions();
-                int clicks = task5.getClicks();
+                int impressions = task5.getimp();
+                int clicks = task5.getclks();
                 long timestamp = task5.getTimestamp();
 
                 Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);

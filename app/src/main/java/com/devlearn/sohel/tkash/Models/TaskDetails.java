@@ -1,7 +1,7 @@
 package com.devlearn.sohel.tkash.Models;
 
 public class TaskDetails {
-    int impressions, clicks;
+    int imp, clks;
 
     long timestamp;
 
@@ -12,27 +12,27 @@ public class TaskDetails {
 
     }
 
-    public TaskDetails(int impressions, int clicks, long timestamp, String status) {
-        this.impressions = impressions;
-        this.clicks = clicks;
+    public TaskDetails(int imp, int clks, long timestamp, String status) {
+        this.imp = imp;
+        this.clks = clks;
         this.timestamp = timestamp;
         this.status = status;
     }
 
-    public int getImpressions() {
-        return impressions;
+    public int getimp() {
+        return imp;
     }
 
-    public void setImpressions(int impressions) {
-        this.impressions = impressions;
+    public void setimp(int imp) {
+        this.imp = imp;
     }
 
-    public int getClicks() {
-        return clicks;
+    public int getclks() {
+        return clks;
     }
 
-    public void setClicks(int clicks) {
-        this.clicks = clicks;
+    public void setclks(int clks) {
+        this.clks = clks;
     }
     public long getTimestamp() {
         return timestamp;

@@ -52,6 +52,7 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_person"
                     android:hint="Your name"
+                    android:maxLength="10"
                     android:inputType="textPersonName"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>

@@ -7,10 +7,13 @@
     tools:context=".TaskDetailsActivity">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp"
+        android:id="@+id/relativeLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
 
         <LinearLayout
@@ -25,7 +28,7 @@
                 android:layout_weight="1.0">
 
                 <com.budiyev.android.circularprogressbar.CircularProgressBar
-                    android:id="@+id/progressBarImpression"
+                    android:id="@+id/progressBarImp"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_centerHorizontal="true"
@@ -57,7 +60,7 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:id="@+id/txtImpression"
+                            android:id="@+id/txtImp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
@@ -89,7 +92,7 @@
                 android:layout_weight="1.0">
 
                 <com.budiyev.android.circularprogressbar.CircularProgressBar
-                    android:id="@+id/progressBarClicks"
+                    android:id="@+id/progressBarClks"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_centerHorizontal="true"
@@ -121,7 +124,7 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:id="@+id/txtClicks"
+                            android:id="@+id/txtClks"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
@@ -179,14 +182,14 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="left|right|center_horizontal|fill_horizontal|center|fill|start|end"
+            android:background="@color/colorAccent"
+            android:elevation="10dp"
             android:paddingBottom="10dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="10dp"
-            android:elevation="10dp"
-            android:text="Click to Proceed"
+            android:text="Start Playing"
             android:textColor="@android:color/white"
-            android:background="@color/colorAccent"
             android:textStyle="bold" />
 
         <Button
@@ -197,19 +200,19 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="180dp"
             android:text="Reset" />
-        <!--android:background="@drawable/btn_bg_filled"-->
-        <!--style="?unknown_attr_ref: 1010042" -->
-        />
-        <com.google.android.gms.ads.AdView
-            xmlns:ads="http://schemas.android.com/apk/res-auto"
+        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/adViewInTask"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             ads:adSize="BANNER"
-            ads:adUnitId="@string/BannerTestAdUnitId">
+            ads:adUnitId="@string/BannerTestAdUnitId"
+            ads:layout_constraintBottom_toBottomOf="parent">
         </com.google.android.gms.ads.AdView>
+
     </RelativeLayout>
+
+
     <!--<com.google.android.gms.ads.AdView android:id="@+id/adView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" android:adSize="BANNER" android:adUnitId="@string/banner_home_footer" />-->
 </android.support.constraint.ConstraintLayout>

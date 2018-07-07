@@ -9,7 +9,10 @@
     <string name="action_settings">Settings</string>
     <string name="verification_reminder">A verification Code will be sent to your Phone Number</string>
     <string name="task_activity">Tasks</string>
+    <string name="welcomeText">Hellow dear!</string>
+
     <string name="admobAppId">ca-app-pub-6933215864400428~4652650981</string>
+    <string name="admobTestId">"ca-app-pub-3940256099942544~3347511713"</string>
     <string name="firstBannerAdUnitId">ca-app-pub-6933215864400428/4107448398</string>
     <string name="BannerTestAdUnitId">ca-app-pub-3940256099942544/6300978111</string>
     <string name="secondBannerAdUnitId">ca-app-pub-6933215864400428/6909763172</string>
@@ -18,4 +21,21 @@
     <string name="InterstitialTask">ca-app-pub-6933215864400428/9385795425</string>
     <string name="InterstitialTest">ca-app-pub-3940256099942544/1033173712</string>
     <string name="InerstitialTestVideo">ca-app-pub-3940256099942544/8691691433</string>
+
+    <string name="textline1">*মিনিমাম পেমেন্ট রিচার্জ- 50 টাকা</string>
+    <string name="textline2">*মিনিমাম বিকাশ পেমেন্ট- ১০৫ টাকা</string>
+    <string name="textline3">*মিমিমাম রকেট পেমেন্ট- ১০৫ টাকা</string>
+    <string name="textline4">*রেফার কমিশন ১ টাকা</string>
+
+    <string name="textline5">★‌ প্রতি দিন ৬০ টাকা করে Earn করতে পারবেন!</string>
+
+    <string name="textline6">নিয়ম-</string>
+
+    <string name="textline7">১) এই app এ কাজ করতে পারবেন ১ ঘন্টায় ৩০ মিনিট এ ৫ টি ট্যাক্স।</string>
+    <string name="textline8">২) প্রতি ট্যাক্স .৭৫ পয়সা করে পাবেন।</string>
+    <string name="textline9">৩) Vpn. ব্যাবহার করতে পারবে না (VPN Use করলে তার Account Blocked করা হবে )</string>
+    <string name="textline10">৪) app open করার পর start earning click করবেন। আপনার সামনে ৫ টি ট্যাক্স দেখাবে। Task 1 click করবেন। এখানে impression এবং click দেখাবে। ২৪ টা impression ads দেখার পর ২৫ নাম্বার ads আসার পর ads click করতে হবে এবং ১ মিনিট অপেক্ষা করতে হবে। ১ মিনিট অপেক্ষা করার পর automatically ট্যাক্স ফিরে আসবে। ads click করার পর যে browser pages open হবে সে page এ ঘুরাঘুরি করবেন। বসে থাকবেন না। ১ থেকে ২৪ নাম্বার এড ক্লিক করবেন না। ক্লিক করলে একাউন্ট বন্ধ হয়ে যাবে। তাই সাবধান এ কাজ করবেন। Task1 কাজ শেষ হলে Task 2 শুরু করবেন। এ ভাবে Task 5 পর্যন্ত কাজ করবেন। সব ট্যাক্স শেষ করার পর ১ ঘন্টা ৩০ মিনিট অপেক্ষা করুন তারপর আবার Task কাজ শুরু করতে পারবেন।</string>
+    <string name="textline11">৫)  পেমেন্ট জন্য Withdraw বাটনে ক্লিক করুন। bkash/rocket/recharge নির্বাচন করুন। withdraw amount বসান এবং মোবাইল নাম্বার দিয়ে submit এ ক্লিক করুন। সব কিছু ঠিক থাকলে History তে বিবরণ দেখতে পাবেন। bkash/rocket ক্ষেত্রে একাউন্ট রেজিস্ট্রেশন নাম্বার হতে হবে।</string>
+    <string name="textline12">৭) একজন যদি রেফার করে তাহলে প্রতি রেফারে ১ টাকা কমিশন পাবে এবং সেটা LIVE কমিশন।</string>
+    <string name="textline13">৮) সবাই নিচে এ Telegram group যুক্ত হবেন। @Tkashsupport</string>
 </resources>
