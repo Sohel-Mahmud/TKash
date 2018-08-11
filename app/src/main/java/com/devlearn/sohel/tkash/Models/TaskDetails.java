@@ -1,11 +1,11 @@
 package com.devlearn.sohel.tkash.Models;
 
 public class TaskDetails {
-    int imp, clks;
+    private int imp, clks;
 
-    long timestamp;
+    private long timestamp;
 
-    String status;
+    private String status;
 
 
     public TaskDetails(){

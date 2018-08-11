@@ -2,8 +2,8 @@ package com.devlearn.sohel.tkash.Models;
 
 public class UpdateLink {
 
-    String url;
-    double version;
+    private String url;
+    private double version;
 
 
     public UpdateLink(){

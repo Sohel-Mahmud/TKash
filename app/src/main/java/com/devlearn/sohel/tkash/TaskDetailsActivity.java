@@ -70,6 +70,9 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
     private double currentBalance;
 
+    private long timestamp, currentTimeStamp;
+    private long cutoff;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +96,9 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
         mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
         mRewardedVideoAd.setRewardedVideoAdListener(this);
-        
+
+        loadInterstitial();
+
         loadRewardedVideo();
 
         progressImp = (CircularProgressBar)findViewById(R.id.progressBarImp);
@@ -102,23 +107,25 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
         txtImp = (TextView)findViewById(R.id.txtImp);
         txtclks = (TextView)findViewById(R.id.txtClks);
         btnReset = findViewById(R.id.btnReset);
+        btnReset.setEnabled(false);
 //        btnReset.setEnabled(true);
 
         try{
             valueEventListener = mDatabasetask.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    task = new TaskDetails();
                     task = dataSnapshot.getValue(TaskDetails.class);
 
                     questions = task.getimp();
                     clks = task.getclks();
-                    long timestamp = task.getTimestamp();
+                    timestamp = task.getTimestamp();
 
-                    Log.d("timestamp","t:"+timestamp);
+                    Log.d("Getlong","timestamp:"+timestamp);
 
-                    long cutoff = new Date().getTime() - TimeUnit.MILLISECONDS.convert(90, TimeUnit.MINUTES);
+                    currentTimeStamp = new Date().getTime() + TimeUnit.MILLISECONDS.convert(40, TimeUnit.SECONDS);
 
-                    Log.d("cutoff","t:"+cutoff);
+                    Log.d("Getlong","currenttime:"+currentTimeStamp);
 
 
                     progressImp.setProgress((float)questions);
@@ -127,45 +134,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                     progressclks.setProgress((float)clks);
                     txtclks.setText(String.valueOf(clks)+"/1");
 
-                    if(questions == 24 && clks == 1)
-                    {
-                        if(timestamp>cutoff)
-                        {
-                            long leftTime = timestamp-cutoff;
-                            int timeleft = (int) leftTime;
-
-                            Log.d("timeleft", "onDataChange: "+timeleft);
-
-                            countDownTimer = new CountDownTimer(timeleft,1000) {
-                                @Override
-                                public void onTick(long millisUntilFinished) {
-                                    String text = String.format(Locale.getDefault(), "Time Remaining %02d hour: %02d min: %02d sec",
-                                            TimeUnit.MILLISECONDS.toHours(millisUntilFinished)%60,TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60,
-                                            TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60);
-                                    btnReset.setText(text);
-                                    btnReset.setEnabled(false);
-                                }
-
-                                @Override
-                                public void onFinish() {
-                                    btnReset.setEnabled(true);
-                                    btnReset.setText("Reset");
-
-                                }
-                            }.start();
-                        }
-                        else
-                        {
-                            Toast.makeText(TaskDetailsActivity.this, "Time to reset", Toast.LENGTH_SHORT).show();
-                            btnReset.setEnabled(true);
-                            btnReset.setText("Reset");
-                        }
-                    }
-                    else
-                    {
-                        btnReset.setEnabled(true);
-                        btnReset.setText("Reset");
-                    }
+                    startResetCounting();
 
                 }
 
@@ -180,7 +149,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
             Toast.makeText(this, "error "+error, Toast.LENGTH_LONG).show();
         }
 
-        loadInterstitial();
+
 
 
 
@@ -196,8 +165,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                     if(interstitialAd.isLoaded())
                     {
                         interstitialAd.show();
-                        adShowed = true;
-                        if(adShowed && questions<24 && !adMissclicked)
+                        if(questions<24 && !adMissclicked)
                         {
                             int finalImpression = questions+1;
                             mDatabasetask.child("imp").setValue(finalImpression);
@@ -205,51 +173,51 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 //                    intent.putExtra("task",taskNumber);
 //                    startActivity(intent);
                             Toast.makeText(TaskDetailsActivity.this, "counted!!!", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(TaskDetailsActivity.this,TaskProcess.class));
+//                            startActivity(new Intent(TaskDetailsActivity.this,TaskProcess.class));
 //                    finish();
 
                         }
-                        else if(adShowed && adMissclicked)
-                        {
-                            Toast.makeText(TaskDetailsActivity.this, "You've Clicked before 20 impressions, this will not be counted and you are banned", Toast.LENGTH_LONG).show();
-                            Log.d("adSavemissclicked","missclickedIntent"+adMissclicked);
-                        }
-                        else if(adShowed && questions==24 && adClicked)
-                        {
-                            int finalClicks = clks+1;
-
-                            try{
-                                double addBalance = currentBalance+0.75;
-                                mDatabasetask.child("clks").setValue(finalClicks);
-                                mDatabasetask.child("timestamp").setValue(ServerValue.TIMESTAMP);
-                                mDatabaseUserDetails.child("currentBalance").setValue(addBalance);
-
-                            }catch (Exception e)
-                            {
-                                Toast.makeText(TaskDetailsActivity.this, "Error adding Balance"+e.getMessage(), Toast.LENGTH_SHORT).show();
-                                Log.d("Error adding Balance","errrr!"+e.getMessage());
-
-                            }
-//                    Intent intent = new Intent(TaskProcess.this, TaskDetailsActivity.class);
-//                    intent.putExtra("task",taskNumber);
-                            Log.d("adperfectclicked","clicked"+adClicked);
-//                    startActivity(intent);
-                            Toast.makeText(TaskDetailsActivity.this, "Click Counted", Toast.LENGTH_LONG).show();
-//                    finish();
-                        }
-                        else
-                        {
-//                    Intent intent = new Intent(TaskProcess.this, TaskDetailsActivity.class);
-//                    intent.putExtra("task",taskNumber);
-//                    startActivity(intent);
-                            Toast.makeText(TaskDetailsActivity.this, "Impression not Added :D", Toast.LENGTH_LONG).show();
-//                    finish();
-                        }
+//                        else if(adMissclicked)
+//                        {
+//                            Toast.makeText(TaskDetailsActivity.this, "You've Clicked before 20 impressions, this will not be counted and you are banned", Toast.LENGTH_LONG).show();
+//                            Log.d("adSavemissclicked","missclickedIntent"+adMissclicked);
+//                        }
+//                        else if(questions==24 && adClicked)
+//                        {
+//                            int finalClicks = clks+1;
+//
+//                            try{
+//                                cutoff = new Date().getTime() + TimeUnit.MILLISECONDS.convert(40, TimeUnit.SECONDS);
+//                                double addBalance = currentBalance+0.75;
+//                                mDatabasetask.child("clks").setValue(finalClicks);
+//                                mDatabasetask.child("timestamp").setValue(cutoff);
+//                                mDatabaseUserDetails.child("currentBalance").setValue(addBalance);
+//
+//                            }catch (Exception e)
+//                            {
+//                                Toast.makeText(TaskDetailsActivity.this, "Error adding Balance"+e.getMessage(), Toast.LENGTH_SHORT).show();
+//                                Log.d("Error adding Balance","errrr!"+e.getMessage());
+//
+//                            }
+////
+//                            Log.d("adperfectclicked","clicked"+adClicked);
+//                            Toast.makeText(TaskDetailsActivity.this, "Click Counted", Toast.LENGTH_LONG).show();
+////
+//                        }
+//                        else
+//                        {
+////                    Intent intent = new Intent(TaskProcess.this, TaskDetailsActivity.class);
+////                    intent.putExtra("task",taskNumber);
+////                    startActivity(intent);
+//                            Toast.makeText(TaskDetailsActivity.this, "Impression not Added :D", Toast.LENGTH_LONG).show();
+////                    finish();
+//                        }
 
                     }
                     else
                     {
-                        startActivity(new Intent(TaskDetailsActivity.this, TaskProcess.class));
+//                        startActivity(new Intent(TaskDetailsActivity.this, TaskProcess.class));
+                        Toast.makeText(TaskDetailsActivity.this, "Couldnt load the questions", Toast.LENGTH_SHORT).show();
                     }
 //                    finish();
                 }
@@ -270,6 +238,48 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
     }
 
+    private void startResetCounting() {
+        if(questions == 24 && clks == 1)
+        {
+            if(currentTimeStamp<timestamp)
+            {
+                long leftTime = timestamp-currentTimeStamp;
+                int timeleft = (int) leftTime;
+
+                Log.d("Getlong", "timeleft: "+timeleft);
+
+                countDownTimer = new CountDownTimer(timeleft,1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        String text = String.format(Locale.getDefault(), "Time Remaining %02d hour: %02d min: %02d sec",
+                                TimeUnit.MILLISECONDS.toHours(millisUntilFinished)%60,TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60,
+                                TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60);
+                        btnReset.setText(text);
+                        btnReset.setEnabled(false);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        btnReset.setEnabled(true);
+                        btnReset.setText("Reset");
+
+                    }
+                }.start();
+            }
+            else
+            {
+                Toast.makeText(TaskDetailsActivity.this, "Time to reset", Toast.LENGTH_SHORT).show();
+                btnReset.setEnabled(true);
+                btnReset.setText("Reset");
+            }
+        }
+        else
+        {
+            btnReset.setEnabled(false);
+            btnReset.setText("Reset");
+        }
+    }
+
     private void loadRewardedVideo() {
         if(!mRewardedVideoAd.isLoaded())
         {
@@ -280,27 +290,27 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
     }
 
     private void resetTasks() {
-        //                Map<String, Object> newValues = new HashMap<>();
-//
-//                newValues.put("clks",0);
-//                newValues.put("imp",0);
-//                newValues.put("status","Running");
-//                newValues.put("timestamp",ServerValue.TIMESTAMP);
-//
-//                mDatabasetask.setValue(newValues);
+
+                Map<String, Object> newValues = new HashMap<>();
+                newValues.put("clks",0);
+                newValues.put("imp",0);
+                newValues.put("status","Running");
+                newValues.put("timestamp",ServerValue.TIMESTAMP);
+
+                mDatabasetask.setValue(newValues);
     }
 
     private void loadInterstitial() {
         interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId(String.valueOf(R.string.InterstitialTest));
-        reqInterstitial = new AdRequest.Builder().addTestDevice("2C750EBF11C8D60CC8D31D18C832AFEB").build();
+        interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        interstitialAd.loadAd(new AdRequest.Builder().build());
 
         interstitialAd.setAdListener(new AdListener(){
 
             @Override
             public void onAdClosed() {
                 startActivity(new Intent(TaskDetailsActivity.this, TaskProcess.class));
-                interstitialAd.loadAd(new AdRequest.Builder().addTestDevice("2C750EBF11C8D60CC8D31D18C832AFEB").build());
+                interstitialAd.loadAd(new AdRequest.Builder().build());
 
             }
 
@@ -311,16 +321,33 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
             @Override
             public void onAdLeftApplication() {
-                if(questions == 24)
+                if(questions==24)
                 {
-                    adClicked = true;
-                    Log.d("adopenadclicked","clicked"+adClicked);
+                    int finalClicks = clks+1;
+
+                    try{
+                        cutoff = new Date().getTime() + TimeUnit.MILLISECONDS.convert(2, TimeUnit.MINUTES);
+                        Log.d("Getlong","cutoff "+cutoff);
+                        double addBalance = currentBalance+0.75;
+                        mDatabasetask.child("clks").setValue(finalClicks);
+                        mDatabasetask.child("timestamp").setValue(cutoff);
+                        mDatabaseUserDetails.child("currentBalance").setValue(addBalance);
+                        Toast.makeText(TaskDetailsActivity.this, "Click Counted", Toast.LENGTH_LONG).show();
+
+
+                    }catch (Exception e)
+                    {
+                        Toast.makeText(TaskDetailsActivity.this, "Error adding Balance"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.d("Error adding Balance","errrr!"+e.getMessage());
+
+                    }
 
                 }
                 else
                 {
-                    adMissclicked = true;
-                    Log.d("adopenadmissclicked","missclicked"+adMissclicked);
+
+                    Toast.makeText(TaskDetailsActivity.this, "You've Clicked before 20 impressions, this will not be counted and you are banned", Toast.LENGTH_LONG).show();
+//                    Log.d("adopenadmissclicked","missclicked"+adMissclicked);
                 }
             }
 
@@ -340,7 +367,6 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
             public void onAdImpression() {
             }
         });
-        interstitialAd.loadAd(reqInterstitial);
     }
 
 
@@ -355,6 +381,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                 mDatabaseUserDetails.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                         UserDetails userDetails = dataSnapshot.getValue(UserDetails.class);
                         currentBalance = userDetails.getCurrentBalance();
                         Log.d("found!","balance"+currentBalance);
@@ -428,7 +455,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
     @Override
     public void onRewarded(RewardItem rewardItem) {
 
-        //resetTasks();
+        resetTasks();
         Toast.makeText(this, "Your reward!!", Toast.LENGTH_LONG).show();
     }
 

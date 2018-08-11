@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#ECEFF1"
     android:orientation="vertical"
-    android:weightSum="10.6"
+    android:weightSum="11"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content" />
 
     <RelativeLayout
-        android:layout_weight="3"
+        android:layout_weight="4"
         android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="0dp">
@@ -90,7 +90,7 @@
                         android:layout_weight="4"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="Current Balance"/>
+                        android:text="Current Point"/>
                     <TextView
                         android:id="@+id/currentBalance"
                         android:layout_weight="4"
@@ -112,11 +112,11 @@
                         android:layout_weight="4"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="Total Balance"/>
+                        android:text="Total Point"/>
                     <TextView
                         android:id="@+id/totalbalance"
                         android:layout_weight="4"
-                        android:text="12taka"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
@@ -168,7 +168,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:text="Information"
+                    android:text="Help"
                     android:textAlignment="center"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -204,7 +204,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:text="Start Earning"
+                    android:text="Start Quiz"
                     android:textAlignment="center"
                     android:textSize="18sp"
                     android:textStyle="bold"
