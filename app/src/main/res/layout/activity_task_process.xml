@@ -1,30 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_weight="10"
+    android:orientation="vertical"
     tools:context=".TaskProcess">
-    
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
 
-        <io.netopen.hotbitmapgg.library.view.RingProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:background="@drawable/edittext_background"
+            android:id="@+id/txtQuestion"
+            android:padding="5dp"
+            android:textSize="18sp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:max="100"
-            app:ringColor="@color/colorPrimary"
-            app:ringProgressColor="@color/colorAccent"
-            app:ringWidth="3dp"
-            app:style="FILL"
-            app:textColor="@color/colorPrimary"
-            app:textIsShow="true"
-            app:textSize="16sp"/>
+            android:text="Your question is here"
+            android:textAlignment="center"/>
 
-    </LinearLayout>
 
-</RelativeLayout>
+
+    <android.support.v7.widget.GridLayout
+        android:layout_weight="8"
+        android:id="@+id/optionGrid"
+        app:columnCount="1"
+        app:rowCount="3"
+        app:alignmentMode="alignMargins"
+        app:columnOrderPreserved="false"
+        android:padding="14dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <Button
+            android:id="@+id/btnOption1"
+        android:background="@color/normal"
+        android:layout_width="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_height="56dp"
+        android:textColor="#fff"
+        android:text="option 1" />
+        <Button
+            android:id="@+id/btnOption2"
+            android:textColor="#fff"
+            android:background="@color/normal"
+            android:layout_width="match_parent"
+            android:layout_marginTop="30dp"
+            android:layout_height="56dp"
+            android:text="option 2" />
+        <Button
+            android:id="@+id/btnOption3"
+            android:textColor="#fff"
+            android:background="@color/normal"
+            android:layout_width="match_parent"
+            android:layout_marginTop="30dp"
+            android:layout_height="56dp"
+            android:text="option 3" />
+
+
+    </android.support.v7.widget.GridLayout>
+
+
+    <TextView
+        android:id="@+id/txtwait"
+        android:padding="5dp"
+        android:textColor="@color/errorcolor"
+        android:textSize="25sp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="wait"
+        android:textAlignment="center"/>
+
+
+</LinearLayout>

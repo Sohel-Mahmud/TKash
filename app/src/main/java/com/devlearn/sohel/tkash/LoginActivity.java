@@ -210,7 +210,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 //                dialog.dismiss();
-
+                waitingDialog = new SpotsDialog(LoginActivity.this);
+                waitingDialog.show();
                 //disable sign in button while processing
 //                btnLogin.setEnabled(false);
 
@@ -218,7 +219,8 @@ public class LoginActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(edtVerificationCode.getText().toString())) {
 //                    edtVerificationCode.setError("Enter verification Code");
 //                    requestFocus(layout_verification.findViewById(R.id.edtVerificationCode));
-                    Toast.makeText(LoginActivity.this, "Insert Code", Toast.LENGTH_SHORT).show();
+                    waitingDialog.dismiss();
+                    Toast.makeText(LoginActivity.this, "Insert Code", Toast.LENGTH_LONG).show();
 
                 }
                 else
@@ -256,7 +258,6 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
 //                            Log.d(TAG, "signInWithCredential:success");
                             //dot waitng process
-//                            waitingDialog.dismiss();
                             Toast.makeText(LoginActivity.this, "Success! checking user exists or not", Toast.LENGTH_SHORT).show();
                             checkUserExists();
                             // ...
@@ -265,6 +266,7 @@ public class LoginActivity extends AppCompatActivity {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The verification code entered was invalid
                                 String error = task.getException().getMessage();
+                                waitingDialog.dismiss();
                                 Snackbar.make(rootlayout, "Invalid " + error, Snackbar.LENGTH_LONG)
                                         .show();
                                 Log.d("Error fire2",error);
@@ -286,6 +288,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.hasChild(user_id))
                     {
+                        waitingDialog.dismiss();
                         Toast.makeText(LoginActivity.this, "Welcome!!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -301,7 +304,8 @@ public class LoginActivity extends AppCompatActivity {
                         mDatabaseUsers.child(user_id).child("userName").setValue(userName);
                         mDatabaseUsers.child(user_id).child("userPhone").setValue(phoneNumber);
                         mDatabaseUsers.child(user_id).child("currentBalance").setValue(0.0);
-                        mDatabaseUsers.child(user_id).child("totalBalance").setValue(0.0);
+                        mDatabaseUsers.child(user_id).child("accStatus").setValue("active");
+                        waitingDialog.dismiss();
                         Toast.makeText(LoginActivity.this, "Success!!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

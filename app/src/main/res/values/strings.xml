@@ -9,7 +9,9 @@
     <string name="action_settings">Settings</string>
     <string name="verification_reminder">A verification Code will be sent to your Phone Number</string>
     <string name="task_activity">Tasks</string>
+    <string name="history_title">History</string>
     <string name="welcomeText">Hellow dear!</string>
+    <string name="mcq">MCQ</string>
 
     <string name="admobAppId">ca-app-pub-6933215864400428~4652650981</string>
     <string name="admobTestId">"ca-app-pub-3940256099942544~3347511713"</string>
@@ -26,11 +28,8 @@
     <string name="textline2">*মিনিমাম বিকাশ পেমেন্ট- ১০৫ টাকা</string>
     <string name="textline3">*মিমিমাম রকেট পেমেন্ট- ১০৫ টাকা</string>
     <string name="textline4">*রেফার কমিশন ১ টাকা</string>
-
     <string name="textline5">★‌ প্রতি দিন ৬০ টাকা করে Earn করতে পারবেন!</string>
-
-    <string name="textline6">নিয়ম-</string>
-
+    <string name="textline6">নিয়ম</string>
     <string name="textline7">১) এই app এ কাজ করতে পারবেন ১ ঘন্টায় ৩০ মিনিট এ ৫ টি ট্যাক্স।</string>
     <string name="textline8">২) প্রতি ট্যাক্স .৭৫ পয়সা করে পাবেন।</string>
     <string name="textline9">৩) Vpn. ব্যাবহার করতে পারবে না (VPN Use করলে তার Account Blocked করা হবে )</string>
@@ -38,4 +37,9 @@
     <string name="textline11">৫)  পেমেন্ট জন্য Withdraw বাটনে ক্লিক করুন। bkash/rocket/recharge নির্বাচন করুন। withdraw amount বসান এবং মোবাইল নাম্বার দিয়ে submit এ ক্লিক করুন। সব কিছু ঠিক থাকলে History তে বিবরণ দেখতে পাবেন। bkash/rocket ক্ষেত্রে একাউন্ট রেজিস্ট্রেশন নাম্বার হতে হবে।</string>
     <string name="textline12">৭) একজন যদি রেফার করে তাহলে প্রতি রেফারে ১ টাকা কমিশন পাবে এবং সেটা LIVE কমিশন।</string>
     <string name="textline13">৮) সবাই নিচে এ Telegram group যুক্ত হবেন। @Tkashsupport</string>
+
+    <!--Telegram links-->
+    <string name="telegramHelp">https://t.me/joinchat/IceMDFGYnoKRnYP-QDGYTg</string>
+    <string name="telegramChannel">https://t.me/Tkashsupport</string>
+    <string name="telegramAdmin">https://t.me/joinchat/IceMDFD5i2ZMaA7rZ536Ag</string>
 </resources>

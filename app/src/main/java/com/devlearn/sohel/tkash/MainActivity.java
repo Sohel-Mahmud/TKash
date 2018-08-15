@@ -30,9 +30,18 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.devlearn.sohel.tkash.IPClass.IPCheck;
 import com.devlearn.sohel.tkash.Models.UpdateLink;
 import com.devlearn.sohel.tkash.Models.UserDetails;
 import com.devlearn.sohel.tkash.Models.WithdrawListDetails;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -49,6 +58,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,12 +71,12 @@ public class MainActivity extends AppCompatActivity
 
     android.support.v7.widget.GridLayout mainGrid;
 
-    TextView txtusername, txtcurrentBalance, txtTotalbalance, txtuserNumber;
-    private double currentBalance, totalBalance;
+    TextView txtusername, txtcurrentBalance, txtAccStatus, txtuserNumber, txtipdetails;
+    private double currentBalance;
 
     private TextView marque;
 
-    private String username, usernumber;
+    private String username, usernumber, accStatus;
     public String user_id;
 
     private String numberProvider,withdrawStatus, withdrawNumber;
@@ -74,6 +86,8 @@ public class MainActivity extends AppCompatActivity
 
     public SpotsDialog waitingDialog;
 
+    public UserDetails userDetails;
+
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseUserDetails;
     private DatabaseReference mDatabaseTask;
@@ -81,6 +95,11 @@ public class MainActivity extends AppCompatActivity
     private DatabaseReference mDatabaseWelcome;
 
     private AdView mAdView;
+
+    public UpdateLink updateLink;
+
+
+    public IPCheck ipCheck;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,21 +122,17 @@ public class MainActivity extends AppCompatActivity
         txtusername = (TextView)findViewById(R.id.username);
         txtuserNumber = findViewById(R.id.userNumber);
         txtcurrentBalance = (TextView)findViewById(R.id.currentBalance);
-        txtTotalbalance = (TextView)findViewById(R.id.totalbalance);
+        txtAccStatus = (TextView)findViewById(R.id.txtAccStatus);
+        txtipdetails = findViewById(R.id.ipdetails);
         marque = findViewById(R.id.bannerMarque);
         marque.setSelected(true);
 
         mainGrid = (android.support.v7.widget.GridLayout)findViewById(R.id.mainGrid);
 
         mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("2C750EBF11C8D60CC8D31D18C832AFEB")
-                .build();
-        mAdView.loadAd(adRequest);
-        if(adRequest.isTestDevice(this)){
-            Toast.makeText(this, "Its a test device", Toast.LENGTH_SHORT).show();
-            Log.d("test device", "onCreate: test device running ");
-        }
+
+        bannerAdRequest();
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -132,6 +147,114 @@ public class MainActivity extends AppCompatActivity
         setSingleEvent(mainGrid);
 
 
+
+    }
+
+    private void GetIp() {
+        ipCheck = new IPCheck();
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        String urlip = "http://checkip.amazonaws.com/";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, urlip, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                    String url ="http://ip-api.com/json/" +response;
+//                    Log.d("actuallink","link: "+url);
+                    ipCheck.setIp(response);
+                    getIPDetails(url);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                ipCheck.setError1("Loading..");
+            }
+        });
+
+        queue.add(stringRequest);
+    }
+
+    private void getIPDetails(String url) {
+        RequestQueue queue2 = Volley.newRequestQueue(this);
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    ipCheck.setCountry(response.getString("country"));
+                    txtipdetails.setText(ipCheck.getCountry()+" IP: "+ipCheck.getIp());
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    txtipdetails.setText(ipCheck.getError1());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                ipCheck.setError2("Error "+error.getMessage());
+            }
+        });
+
+        queue2.add(jsonObjectRequest);
+    }
+
+    private void bannerAdRequest() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("2C750EBF11C8D60CC8D31D18C832AFEB")
+                .build();
+        mAdView.loadAd(adRequest);
+        if(adRequest.isTestDevice(this)){
+            Toast.makeText(this, "Its a test device", Toast.LENGTH_SHORT).show();
+            Log.d("test device", "onCreate: test device running ");
+        }
+
+        mAdView.setAdListener(new AdListener(){
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                super.onAdLeftApplication();
+                try{
+                    mDatabaseUserDetails.child("accStatus").setValue("Banned");
+                    Toast.makeText(MainActivity.this, "You've done something terrible!!", Toast.LENGTH_LONG).show();
+
+//                    Log.d("adopenadmissclicked","missclicked"+adMissclicked);
+                }catch (Exception e)
+                {
+                    Toast.makeText(MainActivity.this, "Error "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onAdOpened() {
+                super.onAdOpened();
+
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+            }
+
+            @Override
+            public void onAdClicked() {
+                super.onAdClicked();
+            }
+
+            @Override
+            public void onAdImpression() {
+                super.onAdImpression();
+            }
+        });
 
     }
 
@@ -150,7 +273,7 @@ public class MainActivity extends AppCompatActivity
                     if(finalI == 1)
                     {
                         checkTaskAvailability();
-                        startActivity(new Intent(MainActivity.this, TaskActivity.class));
+//                        startActivity(new Intent(MainActivity.this, TaskActivity.class));
 
                     }
                     else if(finalI == 2)
@@ -166,7 +289,6 @@ public class MainActivity extends AppCompatActivity
                         infoDetailsAlertDialog();
                     }
 
-                    Toast.makeText(MainActivity.this, "Clicked"+ finalI, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -174,7 +296,7 @@ public class MainActivity extends AppCompatActivity
 
     private void infoDetailsAlertDialog() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("Informaions");
+        dialog.setTitle(getString(R.string.textline6));
 
         LayoutInflater inflater = LayoutInflater.from(this);
         View layout_information = inflater.inflate(R.layout.layout_information,null);
@@ -191,7 +313,7 @@ public class MainActivity extends AppCompatActivity
     private void alertDialog() {
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("Money withdraw");
+        dialog.setTitle("Teka withdraw");
 
         LayoutInflater inflater = LayoutInflater.from(this);
         View layout_withdraw = inflater.inflate(R.layout.layout_withdraw, null);
@@ -316,7 +438,7 @@ public class MainActivity extends AppCompatActivity
 //            waitingDialog.dismiss();
 //            String error  = task.getException().getMessage();
 //            Toast.makeText(MainActivity.this, "Error! "+error, Toast.LENGTH_SHORT).show();
-            Toast.makeText(this, "Your can Recharge 50+tk and bkash, rocket 200+tk!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Your can Recharge 50+points and bkash, rocket 100+points!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -325,58 +447,76 @@ public class MainActivity extends AppCompatActivity
         //dot waitng process
         waitingDialog = new SpotsDialog(MainActivity.this);
         waitingDialog.show();
-
-        ValueEventListener mValueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild(user_id))
-                {
-                    waitingDialog.dismiss();
-                    Intent intent = new Intent(MainActivity.this, TaskActivity.class);
-
-                }
-                else
-                {
-                    Map<String, Object> task1 = new HashMap<>();
-                    Map<String, Object> task2 = new HashMap<>();
-                    Map<String, Object> task3 = new HashMap<>();
-                    Map<String, Object> task4 = new HashMap<>();
-                    Map<String, Object> task5 = new HashMap<>();
-                    task1.put("imp",0);
-                    task1.put("clks",0);
-                    task1.put("timestamp", ServerValue.TIMESTAMP);
-                    task1.put("status", "Running");
-
-                    task2.put("imp",0);
-                    task2.put("clks",0);
-                    task2.put("timestamp", ServerValue.TIMESTAMP);
-                    task2.put("status", "Running");
+        if(userDetails == null)
+        {
+            waitingDialog.dismiss();
+            alertDialogForNoInternet();
+        }
+        else if(!userDetails.accStatus.equals("active"))
+        {
+            waitingDialog.dismiss();
+            alertDialogForBanned();
+        }
+        else if(!ipCheck.getCountry().equals("Bangladesh"))
+        {
+            waitingDialog.dismiss();
+            alertDialogForUsingVPN();
+        }
+        else
+        {
+            ValueEventListener mValueEventListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.hasChild(user_id))
+                    {
+                        waitingDialog.dismiss();
+                        startActivity(new Intent(MainActivity.this, TaskActivity.class));
 
 
-                    task3.put("imp",0);
-                    task3.put("clks",0);
-                    task3.put("timestamp", ServerValue.TIMESTAMP);
-                    task3.put("status", "Running");
+                    }
+                    else
+                    {
+                        Map<String, Object> task1 = new HashMap<>();
+                        Map<String, Object> task2 = new HashMap<>();
+                        Map<String, Object> task3 = new HashMap<>();
+                        Map<String, Object> task4 = new HashMap<>();
+                        Map<String, Object> task5 = new HashMap<>();
+                        task1.put("imp",0);
+                        task1.put("clks",0);
+                        task1.put("timestamp", ServerValue.TIMESTAMP);
+                        task1.put("status", "Running");
+                        mDatabaseTask.child(user_id).child("task1").setValue(task1);
+
+                        task2.put("imp",0);
+                        task2.put("clks",0);
+                        task2.put("timestamp", ServerValue.TIMESTAMP);
+                        task2.put("status", "Running");
+                        mDatabaseTask.child(user_id).child("task2").setValue(task2);
 
 
-                    task4.put("imp",0);
-                    task4.put("clks",0);
-                    task4.put("timestamp", ServerValue.TIMESTAMP);
-                    task4.put("status", "Running");
+                        task3.put("imp",0);
+                        task3.put("clks",0);
+                        task3.put("timestamp", ServerValue.TIMESTAMP);
+                        task3.put("status", "Running");
+                        mDatabaseTask.child(user_id).child("task3").setValue(task3);
 
 
-                    task5.put("imp",0);
-                    task5.put("clks",0);
-                    task5.put("timestamp", ServerValue.TIMESTAMP);
-                    task5.put("status", "Running");
+                        task4.put("imp",0);
+                        task4.put("clks",0);
+                        task4.put("timestamp", ServerValue.TIMESTAMP);
+                        task4.put("status", "Running");
+                        mDatabaseTask.child(user_id).child("task4").setValue(task4);
 
-                    mDatabaseTask.child(user_id).child("task1").setValue(task1);
-                    mDatabaseTask.child(user_id).child("task2").setValue(task2);
-                    mDatabaseTask.child(user_id).child("task3").setValue(task3);
-                    mDatabaseTask.child(user_id).child("task4").setValue(task4);
-                    mDatabaseTask.child(user_id).child("task5").setValue(task5);
-                    waitingDialog.dismiss();
 
+                        task5.put("imp",0);
+                        task5.put("clks",0);
+                        task5.put("timestamp", ServerValue.TIMESTAMP);
+                        task5.put("status", "Running");
+                        mDatabaseTask.child(user_id).child("task5").setValue(task5);
+
+
+                        waitingDialog.dismiss();
+                        startActivity(new Intent(MainActivity.this, TaskActivity.class));
 
 //                            .addOnSuccessListener(new OnSuccessListener<Void>() {
 //                        @Override
@@ -395,17 +535,64 @@ public class MainActivity extends AppCompatActivity
 //                            Toast.makeText(MainActivity.this, "Failed loading tasks! "+error, Toast.LENGTH_SHORT).show();
 //                        }
 //                    });
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                String error = databaseError.getMessage();
-                Log.d("taskerror","error "+error);
-            }
-        };
-        mDatabaseTask.addListenerForSingleValueEvent(mValueEventListener);
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    String error = databaseError.getMessage();
+                    Log.d("taskerror","error "+error);
+                }
+            };
+            mDatabaseTask.addListenerForSingleValueEvent(mValueEventListener);
+        }
 
+
+
+    }
+
+    private void alertDialogForUsingVPN() {
+        AlertDialog.Builder usingVPN = new AlertDialog.Builder(this);
+        usingVPN.setTitle("VPN Detected!");
+        usingVPN.setCancelable(false);
+        usingVPN.setMessage("Our system has detected you are using VPN, please stop VPN service to proceed!")
+                .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                       MainActivity.this.finish();
+                    }
+                });
+        usingVPN.show();
+    }
+
+    private void alertDialogForNoInternet() {
+        AlertDialog.Builder noInternet = new AlertDialog.Builder(this);
+        noInternet.setTitle("No Internet!");
+        noInternet.setCancelable(false);
+        noInternet.setMessage("You have no Internet Connection!")
+                .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        MainActivity.this.finish();
+                    }
+                });
+        noInternet.show();
+    }
+
+    private void alertDialogForBanned() {
+        AlertDialog.Builder bannedDialog = new AlertDialog.Builder(this);
+        bannedDialog.setTitle("You are Banned!");
+        bannedDialog.setCancelable(false);
+        final String url = getString(R.string.telegramAdmin);
+        bannedDialog.setMessage("Sad! You are banned for wrong activity, please contact with admins!")
+                .setPositiveButton("Contact", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        startActivity(browserIntent);
+                    }
+                });
+        bannedDialog.show();
     }
 
     @Override
@@ -435,14 +622,20 @@ public class MainActivity extends AppCompatActivity
             mDatabaseUserDetails.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    UserDetails userDetails = dataSnapshot.getValue(UserDetails.class);
-                    username = userDetails.getUserName();
-                    usernumber = userDetails.getUserPhone();
-                    currentBalance = userDetails.getCurrentBalance();
-                    txtusername.setText(username);
-                    txtuserNumber.setText(usernumber);
-                    txtcurrentBalance.setText(userDetails.getCurrentBalance().toString());
-                    txtTotalbalance.setText(userDetails.getTotalBalance().toString());
+                    userDetails = dataSnapshot.getValue(UserDetails.class);
+
+                    if(userDetails!=null)
+                    {
+                        username = userDetails.userName;
+                        usernumber = userDetails.userPhone;
+                        currentBalance = userDetails.currentBalance;
+                        accStatus = userDetails.accStatus;
+                        txtusername.setText(username);
+                        txtuserNumber.setText(usernumber);
+                        txtcurrentBalance.setText(String.valueOf(currentBalance));
+                        txtAccStatus.setText(accStatus);
+                    }
+
 
                 }
 
@@ -464,7 +657,7 @@ public class MainActivity extends AppCompatActivity
             updateCheck.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    UpdateLink updateLink = dataSnapshot.getValue(UpdateLink.class);
+                    updateLink = dataSnapshot.getValue(UpdateLink.class);
                     double version = updateLink.getVersion();
                     String url = updateLink.getUrl();
 
@@ -483,7 +676,7 @@ public class MainActivity extends AppCompatActivity
         {
             Toast.makeText(this, "UpdateError"+ e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-
+        GetIp();
     }
 
     private void AlertForUpdate(final String url) {
@@ -566,20 +759,35 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_rules) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+            infoDetailsAlertDialog();
+        } else if (id == R.id.nav_community) {
+            String url = getString(R.string.telegramHelp);
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
+        } else if (id == R.id.nav_channel) {
+            String url = getString(R.string.telegramChannel);
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
+        } else if (id == R.id.nav_admin) {
+            String url = getString(R.string.telegramAdmin);
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
         } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_logout) {
-            mAuth.signOut();
-            startActivity(new Intent(MainActivity.this,LoginActivity.class));
-            finish();
+            try {
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_SUBJECT, "TKash");
+                String sAux = "\nLet me recommend you this application\n\n";
+                sAux = sAux + updateLink.getUrl() ;
+                i.putExtra(Intent.EXTRA_TEXT, sAux);
+                startActivity(Intent.createChooser(i, "choose one"));
+            } catch(Exception e) {
+                //e.toString();
+                Toast.makeText(this, "Error "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

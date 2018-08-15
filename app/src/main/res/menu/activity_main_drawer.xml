@@ -5,21 +5,21 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:id="@+id/nav_rules"
+            android:icon="@drawable/ic_rules"
+            android:title="Rules" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:id="@+id/nav_community"
+            android:icon="@drawable/ic_tkash_help"
+            android:title="Telegram Community" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:id="@+id/nav_channel"
+            android:icon="@drawable/ic_tkash_help"
+            android:title="Telegram Channel" />
         <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Account Settings" />
+            android:id="@+id/nav_admin"
+            android:icon="@drawable/ic_tkash_admin"
+            android:title="Telegram Admin" />
     </group>
 
     <item android:title="Communicate">
@@ -28,10 +28,7 @@
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
                 android:title="Share" />
-            <item
-                android:id="@+id/nav_logout"
-                android:icon="@drawable/ic_logout"
-                android:title="Log Out" />
+
         </menu>
     </item>
 

@@ -3,6 +3,8 @@ package com.devlearn.sohel.tkash;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +13,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.budiyev.android.circularprogressbar.CircularProgressBar;
+import com.devlearn.sohel.tkash.IPClass.IPCheck;
 import com.devlearn.sohel.tkash.Models.TaskDetails;
 import com.devlearn.sohel.tkash.Models.UserDetails;
 import com.google.android.gms.ads.AdListener;
@@ -30,6 +40,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -52,9 +65,9 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
     private boolean adShowed = false;
     private boolean adClicked = false;
     private boolean adMissclicked = false;
-    private boolean adEscaped = false;
+    private boolean Escaped = false;
 
-    private CountDownTimer countDownTimer;
+    private CountDownTimer countDownTimer, countDownTimer2;
 
     private CircularProgressBar progressImp, progressclks;
 
@@ -67,6 +80,13 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
     private AdView mAdView;
     private AdRequest reqInterstitial;
     private InterstitialAd interstitialAd;
+    public UserDetails userDetails;
+    ConstraintLayout taskDetailslayout;
+
+    public IPCheck ipCheck;
+    public static final int LENGTH = 30;
+
+    long mills = 30000;
 
     private double currentBalance;
 
@@ -91,8 +111,9 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 //        MobileAds.initialize(this,"ca-app-pub-3940256099942544/5224354917");
 
         mAdView = findViewById(R.id.adViewInTask);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("2C750EBF11C8D60CC8D31D18C832AFEB").build();
-        mAdView.loadAd(adRequest);
+
+        bannerAdRequest();
+
 
         mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
         mRewardedVideoAd.setRewardedVideoAdListener(this);
@@ -107,6 +128,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
         txtImp = (TextView)findViewById(R.id.txtImp);
         txtclks = (TextView)findViewById(R.id.txtClks);
         btnReset = findViewById(R.id.btnReset);
+        taskDetailslayout = (ConstraintLayout)findViewById(R.id.taskdetails);
         btnReset.setEnabled(false);
 //        btnReset.setEnabled(true);
 
@@ -129,7 +151,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
 
                     progressImp.setProgress((float)questions);
-                    txtImp.setText(String.valueOf(questions)+"/24");
+                    txtImp.setText(String.valueOf(questions)+"/30");
 
                     progressclks.setProgress((float)clks);
                     txtclks.setText(String.valueOf(clks)+"/1");
@@ -156,69 +178,34 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
         btnProceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(questions == 24 && clks == 1)
+                if(ipCheck==null)
+                {
+                    Snackbar.make(taskDetailslayout, "Couldn't Load the verifier ", Snackbar.LENGTH_LONG)
+                            .show();
+                }
+                else if(questions == 30 && clks == 1)
                 {
                     Toast.makeText(TaskDetailsActivity.this, "Your task is over, go to next task or You can reset task", Toast.LENGTH_LONG).show();
                 }
                 else {
 
-                    if(interstitialAd.isLoaded())
+                    if(interstitialAd.isLoaded() && ipCheck.getCountry().equals("Bangladesh"))
                     {
                         interstitialAd.show();
-                        if(questions<24 && !adMissclicked)
+                        if(questions<30 && !adMissclicked)
                         {
                             int finalImpression = questions+1;
                             mDatabasetask.child("imp").setValue(finalImpression);
-//                    Intent intent = new Intent(TaskProcess.this, TaskDetailsActivity.class);
-//                    intent.putExtra("task",taskNumber);
-//                    startActivity(intent);
                             Toast.makeText(TaskDetailsActivity.this, "counted!!!", Toast.LENGTH_SHORT).show();
-//                            startActivity(new Intent(TaskDetailsActivity.this,TaskProcess.class));
-//                    finish();
 
                         }
-//                        else if(adMissclicked)
-//                        {
-//                            Toast.makeText(TaskDetailsActivity.this, "You've Clicked before 20 impressions, this will not be counted and you are banned", Toast.LENGTH_LONG).show();
-//                            Log.d("adSavemissclicked","missclickedIntent"+adMissclicked);
-//                        }
-//                        else if(questions==24 && adClicked)
-//                        {
-//                            int finalClicks = clks+1;
-//
-//                            try{
-//                                cutoff = new Date().getTime() + TimeUnit.MILLISECONDS.convert(40, TimeUnit.SECONDS);
-//                                double addBalance = currentBalance+0.75;
-//                                mDatabasetask.child("clks").setValue(finalClicks);
-//                                mDatabasetask.child("timestamp").setValue(cutoff);
-//                                mDatabaseUserDetails.child("currentBalance").setValue(addBalance);
-//
-//                            }catch (Exception e)
-//                            {
-//                                Toast.makeText(TaskDetailsActivity.this, "Error adding Balance"+e.getMessage(), Toast.LENGTH_SHORT).show();
-//                                Log.d("Error adding Balance","errrr!"+e.getMessage());
-//
-//                            }
-////
-//                            Log.d("adperfectclicked","clicked"+adClicked);
-//                            Toast.makeText(TaskDetailsActivity.this, "Click Counted", Toast.LENGTH_LONG).show();
-////
-//                        }
-//                        else
-//                        {
-////                    Intent intent = new Intent(TaskProcess.this, TaskDetailsActivity.class);
-////                    intent.putExtra("task",taskNumber);
-////                    startActivity(intent);
-//                            Toast.makeText(TaskDetailsActivity.this, "Impression not Added :D", Toast.LENGTH_LONG).show();
-////                    finish();
-//                        }
 
                     }
                     else
                     {
 //                        startActivity(new Intent(TaskDetailsActivity.this, TaskProcess.class));
-                        Toast.makeText(TaskDetailsActivity.this, "Couldnt load the questions", Toast.LENGTH_SHORT).show();
-                    }
+                        Snackbar.make(taskDetailslayout, "Couldn't Load the Data and Verifier", Snackbar.LENGTH_LONG)
+                                .show();                    }
 //                    finish();
                 }
             }
@@ -238,8 +225,63 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
     }
 
+    private void bannerAdRequest() {
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("2C750EBF11C8D60CC8D31D18C832AFEB").build();
+        mAdView.loadAd(adRequest);
+
+        mAdView.setAdListener(new AdListener(){
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                super.onAdLeftApplication();
+                try{
+                    mDatabaseUserDetails.child("accStatus").setValue("Banned");
+                    Toast.makeText(TaskDetailsActivity.this, "You've done something terrible!!", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(TaskDetailsActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+
+//                    Log.d("adopenadmissclicked","missclicked"+adMissclicked);
+                }catch (Exception e)
+                {
+                    Toast.makeText(TaskDetailsActivity.this, "Error "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onAdOpened() {
+                super.onAdOpened();
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+            }
+
+            @Override
+            public void onAdClicked() {
+                super.onAdClicked();
+            }
+
+            @Override
+            public void onAdImpression() {
+                super.onAdImpression();
+            }
+        });
+    }
+
     private void startResetCounting() {
-        if(questions == 24 && clks == 1)
+        if(questions == 30 && clks == 1)
         {
             if(currentTimeStamp<timestamp)
             {
@@ -309,6 +351,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
             @Override
             public void onAdClosed() {
+
                 startActivity(new Intent(TaskDetailsActivity.this, TaskProcess.class));
                 interstitialAd.loadAd(new AdRequest.Builder().build());
 
@@ -321,38 +364,63 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
             @Override
             public void onAdLeftApplication() {
-                if(questions==24)
+                Escaped = true;
+                if(questions==30)
                 {
-                    int finalClicks = clks+1;
+                    final int finalClicks = clks+1;
 
-                    try{
-                        cutoff = new Date().getTime() + TimeUnit.MILLISECONDS.convert(2, TimeUnit.MINUTES);
+                    countDownTimer2 = new CountDownTimer(50000,1000) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+
+                        Toast.makeText(TaskDetailsActivity.this, "Wait "+millisUntilFinished/1000+" sec", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFinish() {
+                        try{
+                        cutoff = new Date().getTime() + TimeUnit.MILLISECONDS.convert(2, TimeUnit.HOURS);
                         Log.d("Getlong","cutoff "+cutoff);
                         double addBalance = currentBalance+0.75;
                         mDatabasetask.child("clks").setValue(finalClicks);
                         mDatabasetask.child("timestamp").setValue(cutoff);
                         mDatabaseUserDetails.child("currentBalance").setValue(addBalance);
-                        Toast.makeText(TaskDetailsActivity.this, "Click Counted", Toast.LENGTH_LONG).show();
+                        Toast.makeText(TaskDetailsActivity.this, "Completed!", Toast.LENGTH_LONG).show();
 
-
-                    }catch (Exception e)
-                    {
+                        }catch (Exception e)
+                        {
                         Toast.makeText(TaskDetailsActivity.this, "Error adding Balance"+e.getMessage(), Toast.LENGTH_SHORT).show();
                         Log.d("Error adding Balance","errrr!"+e.getMessage());
 
-                    }
+                        }
+
+                        }
+                    }.start();
 
                 }
                 else
                 {
+                    try{
+                        mDatabaseUserDetails.child("accStatus").setValue("Banned");
+                        adMissclicked = true;
+                        Toast.makeText(TaskDetailsActivity.this, "You've done something terrible!!", Toast.LENGTH_LONG).show();
+                        Intent intent =  new Intent(TaskDetailsActivity.this,MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
 
-                    Toast.makeText(TaskDetailsActivity.this, "You've Clicked before 20 impressions, this will not be counted and you are banned", Toast.LENGTH_LONG).show();
 //                    Log.d("adopenadmissclicked","missclicked"+adMissclicked);
+                    }catch (Exception e)
+                    {
+                        Toast.makeText(TaskDetailsActivity.this, "Error "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             }
 
             @Override
             public void onAdOpened() {
+
             }
 
             @Override
@@ -370,6 +438,53 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
     }
 
 
+    private void GetIp() {
+        ipCheck = new IPCheck();
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        String urlip = "http://checkip.amazonaws.com/";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, urlip, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                String url ="http://ip-api.com/json/" +response;
+//                    Log.d("actuallink","link: "+url);
+                ipCheck.setIp(response);
+                getIPDetails(url);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                ipCheck.setError1("Loading..");
+            }
+        });
+
+        queue.add(stringRequest);
+    }
+
+    private void getIPDetails(String url) {
+        RequestQueue queue2 = Volley.newRequestQueue(this);
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    ipCheck.setCountry(response.getString("country"));
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                ipCheck.setError2("Error "+error.getMessage());
+            }
+        });
+
+        queue2.add(jsonObjectRequest);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -382,9 +497,13 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        UserDetails userDetails = dataSnapshot.getValue(UserDetails.class);
-                        currentBalance = userDetails.getCurrentBalance();
-                        Log.d("found!","balance"+currentBalance);
+                        userDetails = dataSnapshot.getValue(UserDetails.class);
+                        if(userDetails!=null)
+                        {
+                            currentBalance = userDetails.currentBalance;
+                            Log.d("found!","balance"+currentBalance);
+                        }
+
 
                     }
 
@@ -402,6 +521,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
             Toast.makeText(this, "Problem with Login", Toast.LENGTH_SHORT).show();
         }
 
+        GetIp();
 
     }
 
@@ -421,6 +541,23 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
         }
         mRewardedVideoAd.pause(this);
         super.onPause();
+//        if(Escaped)
+//        {
+//            countDownTimer = new CountDownTimer(4000,1000) {
+//                @Override
+//                public void onTick(long millisUntilFinished) {
+//
+//                    Toast.makeText(TaskDetailsActivity.this, "Wait"+millisUntilFinished / 1000, Toast.LENGTH_SHORT).show();
+//                }
+//
+//                @Override
+//                public void onFinish() {
+//                    Toast.makeText(TaskDetailsActivity.this, "Ok", Toast.LENGTH_SHORT).show();
+//                }
+//            }.start();
+//        }
+//        Toast.makeText(TaskDetailsActivity.this, "Ok", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override

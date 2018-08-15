@@ -3,6 +3,7 @@ package com.devlearn.sohel.tkash;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -44,7 +45,7 @@ public class TaskActivity extends AppCompatActivity {
 
     CountDownTimer countDownTimer;
 
-    private CardView taskcard1, taskcard2, taskcard3, taskcard4, taskcard5, taskcard6, taskcard7, taskcard8, taskcard9, taskcard10, resetTaskCard;
+    private CardView taskcard1, taskcard2, taskcard3, taskcard4, taskcard5, taskcard6, taskcard7, taskcard8, taskcard9, taskcard10,ipcard,resetTaskCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,13 @@ public class TaskActivity extends AppCompatActivity {
         taskcard3 = findViewById(R.id.taskcard3);
         taskcard4 = findViewById(R.id.taskcard4);
         taskcard5 = findViewById(R.id.taskcard5);
+        taskcard1.setEnabled(false);
+        taskcard2.setEnabled(false);
+        taskcard3.setEnabled(false);
+        taskcard4.setEnabled(false);
+        taskcard5.setEnabled(false);
+
+        ipcard = findViewById(R.id.ipCard);
 
         txtTaskstatus1 = findViewById(R.id.txttaskstatus1);
         txtTaskstatus2 = findViewById(R.id.txttaskstatus2);
@@ -75,16 +83,33 @@ public class TaskActivity extends AppCompatActivity {
 
         txtResetTask = findViewById(R.id.txtResetTask);
 
+        ipcard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(TaskActivity.this,TestIP.class));
+            }
+        });
+
+        if(task1!=null && task2!=null && task3!=null && task4!=null && task5!=null)
+        {
+
+        }
+        else{
+            Snackbar.make(rootlayout, "Couldnt Load the data", Snackbar.LENGTH_LONG)
+                    .show();
+        }
+
         taskcard1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
-                    LoadTask1();
 
-                }catch (NullPointerException e)
+                if(task1!=null)
                 {
-                    Toast.makeText(TaskActivity.this, "error!"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
+                    intent.putExtra("task","task1");
+                    startActivity(intent);
                 }
+
 
 
             }
@@ -93,12 +118,11 @@ public class TaskActivity extends AppCompatActivity {
         taskcard2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
-                    LoadTask2();
-
-                }catch (NullPointerException e)
+                if(task2!=null)
                 {
-                    Toast.makeText(TaskActivity.this, "Error"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
+                    intent.putExtra("task","task2");
+                    startActivity(intent);
                 }
 
             }
@@ -107,12 +131,11 @@ public class TaskActivity extends AppCompatActivity {
         taskcard3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
-                    LoadTask3();
-
-                }catch (NullPointerException e)
+                if(task3!=null)
                 {
-                    Toast.makeText(TaskActivity.this, "Error"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
+                    intent.putExtra("task","task3");
+                    startActivity(intent);
                 }
             }
         });
@@ -120,12 +143,11 @@ public class TaskActivity extends AppCompatActivity {
         taskcard4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
-                    LoadTask4();
-
-                }catch (NullPointerException e)
+                if(task4!=null)
                 {
-                    Toast.makeText(TaskActivity.this, "Error"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
+                    intent.putExtra("task","task4");
+                    startActivity(intent);
                 }
 
             }
@@ -134,12 +156,11 @@ public class TaskActivity extends AppCompatActivity {
         taskcard5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
-                    LoadTask5();
-
-                }catch (NullPointerException e)
+                if(task5!=null)
                 {
-                    Toast.makeText(TaskActivity.this, "Error"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
+                    intent.putExtra("task","task5");
+                    startActivity(intent);
                 }
 
             }
@@ -188,21 +209,6 @@ public class TaskActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        if(taskLishtenr1!=null && taskLishtenr2!=null)
-        {
-            mDatabasetask1.removeEventListener(taskLishtenr1);
-            mDatabasetask2.removeEventListener(taskLishtenr2);
-        }
-
-    }
-
-    private void LoadTask1() {
         taskLishtenr1 = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -214,10 +220,7 @@ public class TaskActivity extends AppCompatActivity {
                 int impressions = task1.getimp();
                 int clicks = task1.getclks();
                 long timestamp = task1.getTimestamp();
-                    Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
-                    intent.putExtra("task","task1");
-                    startActivity(intent);
-                    Toast.makeText(TaskActivity.this, "task1"+clicks+impressions+timestamp, Toast.LENGTH_SHORT).show();
+
 
             }
 
@@ -232,8 +235,6 @@ public class TaskActivity extends AppCompatActivity {
         };
         mDatabasetask1.addListenerForSingleValueEvent(taskLishtenr1);
 
-    }
-    private void LoadTask2() {
         taskLishtenr2 = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -245,10 +246,9 @@ public class TaskActivity extends AppCompatActivity {
                 int clicks = task2.getclks();
                 long timestamp = task2.getTimestamp();
 
-                    Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
-                    intent.putExtra("task","task2");
-                    startActivity(intent);
-                    Toast.makeText(TaskActivity.this, "task2"+clicks+impressions+timestamp, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
+                intent.putExtra("task","task2");
+                startActivity(intent);
             }
 
             @Override
@@ -262,8 +262,6 @@ public class TaskActivity extends AppCompatActivity {
         };
         mDatabasetask2.addListenerForSingleValueEvent(taskLishtenr2);
 
-    }
-    private void LoadTask3() {
         taskLishtenr3 = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -278,7 +276,6 @@ public class TaskActivity extends AppCompatActivity {
                 Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
                 intent.putExtra("task","task3");
                 startActivity(intent);
-                Toast.makeText(TaskActivity.this, "task3"+clicks+impressions+timestamp, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -291,9 +288,7 @@ public class TaskActivity extends AppCompatActivity {
 
         };
         mDatabasetask3.addListenerForSingleValueEvent(taskLishtenr3);
-    }
 
-    private void LoadTask4() {
         taskLishtenr4 = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -308,7 +303,6 @@ public class TaskActivity extends AppCompatActivity {
                 Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
                 intent.putExtra("task","task4");
                 startActivity(intent);
-                Toast.makeText(TaskActivity.this, "task4"+clicks+impressions+timestamp, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -321,9 +315,6 @@ public class TaskActivity extends AppCompatActivity {
 
         };
         mDatabasetask4.addListenerForSingleValueEvent(taskLishtenr4);
-    }
-
-    private void LoadTask5() {
         taskLishtenr5 = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -338,7 +329,6 @@ public class TaskActivity extends AppCompatActivity {
                 Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
                 intent.putExtra("task","task5");
                 startActivity(intent);
-                Toast.makeText(TaskActivity.this, "task5"+clicks+impressions+timestamp, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -351,6 +341,41 @@ public class TaskActivity extends AppCompatActivity {
 
         };
         mDatabasetask5.addListenerForSingleValueEvent(taskLishtenr5);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(taskLishtenr1!=null && taskLishtenr2!=null)
+        {
+            mDatabasetask1.removeEventListener(taskLishtenr1);
+            mDatabasetask2.removeEventListener(taskLishtenr2);
+            mDatabasetask3.removeEventListener(taskLishtenr3);
+            mDatabasetask4.removeEventListener(taskLishtenr4);
+            mDatabasetask5.removeEventListener(taskLishtenr5);
+        }
+
+    }
+
+    private void LoadTask1() {
+
+
+    }
+    private void LoadTask2() {
+
+
+    }
+    private void LoadTask3() {
+
+    }
+
+    private void LoadTask4() {
+
+    }
+
+    private void LoadTask5() {
+
     }
 
 //    private void countDownTimeForTask() {

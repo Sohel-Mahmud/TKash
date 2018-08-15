@@ -40,8 +40,10 @@ dependencies {
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     implementation 'com.github.d-max:spots-dialog:0.7@aar'
     implementation 'com.github.HotBitmapGG:RingProgressBar:V1.2.3'
+    implementation 'com.android.volley:volley:1.1.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
 }
 apply plugin: 'com.google.gms.google-services'

@@ -10,4 +10,8 @@
 
     <color name="green">#1de9b6</color>
     <color name="green_dark">#009688</color>
+
+    <color name="error">#b00020</color>
+    <color name="normal">#03A9F4</color>
+    <color name="correct">#388E3C</color>
 </resources>

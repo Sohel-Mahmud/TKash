@@ -1,14 +1,22 @@
 package com.devlearn.sohel.tkash;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayout;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devlearn.sohel.tkash.Models.McqDetails;
 import com.devlearn.sohel.tkash.Models.UserDetails;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -22,207 +30,135 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Locale;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
 import io.netopen.hotbitmapgg.library.view.RingProgressBar;
 
 public class TaskProcess extends AppCompatActivity {
 
-    RingProgressBar ringProgress_bar;
 
-    int progress = 0;
+    private int ans;
+    private int quesNumber;
+    public McqDetails mcqDetails;
+    private TextView txtQuestion, txtWait;
 
-    private InterstitialAd mInterstitialAd;
 
-    private String taskNumber;
-    private int impressions, clicks;
-
-    private boolean adShowed = false;
-    private boolean adClicked = false;
-    private boolean adMissclicked = false;
-    private boolean adEscaped = false;
-
-    private DatabaseReference mDatabasetask
-            ,mDatabaseUserDetails
-            ;
+    GridLayout ansGrid;
+    private DatabaseReference mDatabaseQuestions, mDatabaseUserDetails;
     private FirebaseAuth mAuth;
 
-    private String user_id;
+    String user_id;
 
-    private double currentBalance;
+    public UserDetails userDetails;
 
-    Handler myHandler = new Handler(){
+    private Button option1,option2,option3;
 
-        @Override
-        public void handleMessage(Message msg) {
-            if(msg.what == 0)
-            {
-                if(progress<100)
-                {
-                    progress++;
-                    ringProgress_bar.setProgress(progress);
-                }
-            }
-        }
-    };
+    CountDownTimer countDownTimer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_process);
 
-        ringProgress_bar = (RingProgressBar)findViewById(R.id.progress_bar);
+        ansGrid = findViewById(R.id.optionGrid);
 
-//        taskNumber = getIntent().getExtras().getString("task");
-//        impressions = getIntent().getIntExtra("impressions",0);
-//        clicks = getIntent().getIntExtra("clicks",1);
-
-//        Log.d("Values","m"+taskNumber+impressions+clicks);
-
-
-//        mAuth = FirebaseAuth.getInstance();
-//
-//        user_id = mAuth.getCurrentUser().getUid();
-//
-//        mDatabasetask = FirebaseDatabase.getInstance().getReference().child("Tasks").child(user_id).child(taskNumber);
-//        mDatabaseUserDetails = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+        option1 = findViewById(R.id.btnOption1);
+        option2 = findViewById(R.id.btnOption2);
+        option3 = findViewById(R.id.btnOption3);
+        txtQuestion = findViewById(R.id.txtQuestion);
+        txtWait = findViewById(R.id.txtwait);
 
 
-//        MobileAds.initialize(this, String.valueOf(R.string.admobAppId));
-//
-//        mInterstitialAd = new InterstitialAd(TaskProcess.this);
-//        mInterstitialAd.setAdUnitId(getResources().getString(R.string.InterstitialTask));
-////        mInterstitialAd.loadAd(new AdRequest.Builder()
-////                .addTestDevice("2C750EBF11C8D60CC8D31D18C832AFEB")
-////                .build());
-//
-//        AdRequest adRequestInter = new AdRequest.Builder()
-////                                .addTestDevice("2C750EBF11C8D60CC8D31D18C832AFEB")
-//                                .build();
-//
-//        mInterstitialAd.setAdListener(new AdListener() {
-//
-//            @Override
-//            public void onAdLoaded() {
-//                // Code to be executed when an ad finishes loading.
-////                showInterstitial();
-//                mInterstitialAd.show();
-//
-//                adShowed = true;
-//
-//            }
-//
-//            @Override
-//            public void onAdFailedToLoad(int errorCode) {
-//                // Code to be executed when an ad request fails.
-//            }
-//
-//            @Override
-//            public void onAdOpened() {
-//                // Code to be executed when the ad is displayed.
-//
-//            }
-//
-//            @Override
-//            public void onAdLeftApplication() {
-//                // Code to be executed when the user has left the app.
-//                if(impressions == 24)
-//                {
-//                    adClicked = true;
-//                    Log.d("adopenadclicked","clicked"+adClicked);
-//
-//                }
-//                else
-//                {
-//                    adMissclicked = true;
-//                    Log.d("adopenadmissclicked","missclicked"+adMissclicked);
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onAdClosed() {
-//                // Code to be executed when when the interstitial ad is closed.
-//                //its distrubing
-////                mInterstitialAd.loadAd(new AdRequest.Builder().build());
-//
-//
-//            }
-//        });
-//        mInterstitialAd.loadAd(adRequestInter);
+        mAuth = FirebaseAuth.getInstance();
+        user_id = mAuth.getCurrentUser().getUid();
 
-        ringProgress_bar.setOnProgressListener(new RingProgressBar.OnProgressListener() {
+        mDatabaseUserDetails = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+
+        setToggleEvent(ansGrid);
+
+        setTimerForGoingBack();
+
+    }
+
+    private void setTimerForGoingBack() {
+        countDownTimer = new CountDownTimer(4000,1000) {
             @Override
-            public void progressToComplete() {
-
-//                if(adShowed && impressions<24 && !adMissclicked)
-//                {
-//                    int finalImpression = impressions+1;
-//                    mDatabasetask.child("impressions").setValue(finalImpression);
-////                    Intent intent = new Intent(TaskProcess.this, TaskDetailsActivity.class);
-////                    intent.putExtra("task",taskNumber);
-////                    startActivity(intent);
-//                    Toast.makeText(TaskProcess.this, "counted!!!", Toast.LENGTH_SHORT).show();
-////                    finish();
-//
-//                }
-//                else if(adShowed && adMissclicked)
-//                {
-//                    Toast.makeText(TaskProcess.this, "You've Clicked before 20 impressions, this will not be counted and you are banned", Toast.LENGTH_LONG).show();
-////                    Intent intent = new Intent(TaskProcess.this, TaskDetailsActivity.class);
-////                    intent.putExtra("task",taskNumber);
-//                    Log.d("adSavemissclicked","missclickedIntent"+adMissclicked);
-////                    startActivity(intent);
-////                    finish();
-//                }
-//                else if(adShowed && impressions==24 && adClicked)
-//                {
-//                    int finalClicks = clicks+1;
-//
-//                    try{
-//                        double addBalance = currentBalance+0.75;
-//                        mDatabasetask.child("clicks").setValue(finalClicks);
-//                        mDatabaseUserDetails.child("currentBalance").setValue(addBalance);
-//
-//                    }catch (Exception e)
-//                    {
-//                        Toast.makeText(TaskProcess.this, "Error adding Balance"+e.getMessage(), Toast.LENGTH_SHORT).show();
-//                        Log.d("Error adding Balance","errrr!"+e.getMessage());
-//
-//                    }
-////                    Intent intent = new Intent(TaskProcess.this, TaskDetailsActivity.class);
-////                    intent.putExtra("task",taskNumber);
-//                    Log.d("adperfectclicked","clicked"+adClicked);
-////                    startActivity(intent);
-//                    Toast.makeText(TaskProcess.this, "Click Counted", Toast.LENGTH_LONG).show();
-////                    finish();
-//                }
-//                else
-//                {
-////                    Intent intent = new Intent(TaskProcess.this, TaskDetailsActivity.class);
-////                    intent.putExtra("task",taskNumber);
-////                    startActivity(intent);
-//                    Toast.makeText(TaskProcess.this, "Impression not Added :D", Toast.LENGTH_LONG).show();
-////                    finish();
-//                }
+            public void onTick(long millisUntilFinished) {
+                txtWait.setTextColor(getResources().getColor(R.color.errorcolor));
+                txtWait.setText("Wait( " + millisUntilFinished / 1000+" sec)");
+                onBackPressed();
             }
-        });
 
-        new Thread(new Runnable() {
             @Override
-            public void run() {
-                for(int i=0; i<100; i++)
+            public void onFinish() {
+
+                if(!userDetails.accStatus.equals("active"))
                 {
-                    try{
-                        Thread.sleep(100);
-                        myHandler.sendEmptyMessage(0);
-                    }catch (InterruptedException e)
-                    {
-                        e.printStackTrace();
-                    }
+                    Intent intent =  new Intent(TaskProcess.this,MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
                 }
+                else
+                {
+                    txtWait.setText("Ok");
+                    TaskProcess.super.onBackPressed();
+                }
+
+
             }
-        }).start();
+        }.start();
+    }
+
+    @Override
+    public void onBackPressed() {
+
+//        super.onBackPressed();  commented this to disable the back press
+    }
+
+    private void setToggleEvent(final GridLayout ansGrid) {
+        for(int i=0; i<ansGrid.getChildCount();i++)
+        {
+            final Button btnOption = (Button)ansGrid.getChildAt(i);
+            final int cursor = i;
+            btnOption.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(cursor == 0 && ans == 1)
+                    {
+                        btnOption.setBackgroundColor(Color.parseColor("#388E3C"));
+
+                    }
+                    else if(cursor == 1 && ans == 2)
+                    {
+                        btnOption.setBackgroundColor(Color.parseColor("#388E3C"));
 
 
+//                        btnOption.setBackgroundColor(Color.parseColor(String.valueOf(R.color.correct)));
+
+                    }
+                    else if(cursor == 2 && ans == 3)
+                    {
+                        btnOption.setBackgroundColor(Color.parseColor("#388E3C"));
+
+
+//                        btnOption.setBackgroundColor(Color.parseColor(String.valueOf(R.color.correct)));
+
+                    }
+                    else
+                    {
+                        btnOption.setBackgroundColor(Color.parseColor("#b00020"));
+
+//                        btnOption.setBackgroundColor(Color.parseColor(String.valueOf(R.color.error)));
+
+                    }
+
+                }
+            });
+        }
     }
 
 
@@ -230,35 +166,69 @@ public class TaskProcess extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//        if (user != null) {
-//            // User is signed in
-////            String user_id = user.getUid();
-//            try{
-//                mDatabaseUserDetails.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        UserDetails userDetails = dataSnapshot.getValue(UserDetails.class);
-//                        currentBalance = userDetails.getCurrentBalance();
-//                        Log.d("found!","balance"+currentBalance);
-//
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
-//            }catch (Exception e)
-//            {
-//                Toast.makeText(this, "Error getting userDetails"+e.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//
-//        } else {
-//            Toast.makeText(this, "Problem with Login", Toast.LENGTH_SHORT).show();
-//        }
-//
+        Random r = new Random();
+
+        quesNumber = r.nextInt(30)+1;
+        String quesNumbers = String.valueOf(quesNumber);
+        mDatabaseQuestions = FirebaseDatabase.getInstance().getReference().child("Questions").child(quesNumbers);
+
+        ValueEventListener quesListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mcqDetails = dataSnapshot.getValue(McqDetails.class);
+//                Log.d("mcqdata","ques"+mcqDetails.question);
+//                Log.d("mcqdata","opt1"+mcqDetails.option1);
+//                Log.d("mcqdata","opt2"+mcqDetails.option2);
+//                Log.d("mcqdata","opt3"+mcqDetails.option3);
+//                Log.d("mcqdata","ans"+mcqDetails.ans);
+
+                if(mcqDetails!=null)
+                {
+                    option1.setText(mcqDetails.option1);
+                    option2.setText(mcqDetails.option2);
+                    option3.setText(mcqDetails.option3);
+                    txtQuestion.setText(mcqDetails.ques);
+                    ans = mcqDetails.ans;
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        mDatabaseQuestions.addListenerForSingleValueEvent(quesListener);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
+//            String user_id = user.getUid();
+            try{
+                mDatabaseUserDetails.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        userDetails = dataSnapshot.getValue(UserDetails.class);
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }catch (Exception e)
+            {
+                Toast.makeText(this, "Error getting userDetails"+e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+        } else {
+            Toast.makeText(this, "Problem with Login", Toast.LENGTH_SHORT).show();
+        }
 
 
     }
+
 }
+
