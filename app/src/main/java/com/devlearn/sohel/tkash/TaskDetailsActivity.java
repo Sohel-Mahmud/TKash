@@ -24,6 +24,7 @@ import com.budiyev.android.circularprogressbar.CircularProgressBar;
 import com.devlearn.sohel.tkash.IPClass.IPCheck;
 import com.devlearn.sohel.tkash.Models.TaskDetails;
 import com.devlearn.sohel.tkash.Models.UserDetails;
+import com.devlearn.sohel.tkash.SharedPref.TaskSharedPref;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -66,6 +67,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
     private boolean adClicked = false;
     private boolean adMissclicked = false;
     private boolean Escaped = false;
+    private TaskSharedPref usp;
 
     private CountDownTimer countDownTimer, countDownTimer2;
 
@@ -111,6 +113,8 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 //        MobileAds.initialize(this,"ca-app-pub-3940256099942544/5224354917");
 
         mAdView = findViewById(R.id.adViewInTask);
+
+        usp = new TaskSharedPref(TaskDetailsActivity.this);
 
         bannerAdRequest();
 
@@ -369,7 +373,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                 {
                     final int finalClicks = clks+1;
 
-                    countDownTimer2 = new CountDownTimer(50000,1000) {
+                    countDownTimer2 = new CountDownTimer(10000,1000) {
                         @Override
                         public void onTick(long millisUntilFinished) {
 
@@ -385,6 +389,36 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                         mDatabasetask.child("clks").setValue(finalClicks);
                         mDatabasetask.child("timestamp").setValue(cutoff);
                         mDatabaseUserDetails.child("currentBalance").setValue(addBalance);
+
+                        if(taskNumber.equals("task1")){
+                            usp.setTaskNumber(2);
+                            Toast.makeText(TaskDetailsActivity.this, "taskNumber"+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
+                        }
+                        else if(taskNumber.equals("task2"))
+                        {
+                            usp.setTaskNumber(3);
+                            Toast.makeText(TaskDetailsActivity.this, "taskNumber"+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
+
+                        }
+                        else if(taskNumber.equals("task3"))
+                        {
+                            usp.setTaskNumber(4);
+                            Toast.makeText(TaskDetailsActivity.this, "taskNumber"+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
+
+                        }
+                        else if(taskNumber.equals("task4"))
+                        {
+                            usp.setTaskNumber(5);
+                            Toast.makeText(TaskDetailsActivity.this, "taskNumber"+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
+
+                        }
+                        else if(taskNumber.equals("task5"))
+                        {
+                            usp.setTaskNumber(1);
+                            Toast.makeText(TaskDetailsActivity.this, "taskNumber"+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
+
+                        }
+
                         Toast.makeText(TaskDetailsActivity.this, "Completed!", Toast.LENGTH_LONG).show();
 
                         }catch (Exception e)

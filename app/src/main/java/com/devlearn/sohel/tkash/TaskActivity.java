@@ -1,6 +1,7 @@
 package com.devlearn.sohel.tkash;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -9,10 +10,12 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devlearn.sohel.tkash.Models.TaskDetails;
+import com.devlearn.sohel.tkash.SharedPref.TaskSharedPref;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,10 +37,13 @@ public class TaskActivity extends AppCompatActivity {
     public String user_id;
 
     SpotsDialog waitingDialog;
+    ScrollView taskactivity;
 
     public TaskDetails task1, task2, task3, task4, task5;
 
     private TextView txtResetTask;
+
+    private TaskSharedPref usp;
 
     private ValueEventListener taskLishtenr1,taskLishtenr2, taskLishtenr3,taskLishtenr4,taskLishtenr5;
 
@@ -65,13 +71,22 @@ public class TaskActivity extends AppCompatActivity {
         taskcard3 = findViewById(R.id.taskcard3);
         taskcard4 = findViewById(R.id.taskcard4);
         taskcard5 = findViewById(R.id.taskcard5);
+        taskactivity = findViewById(R.id.taskactivity);
         taskcard1.setEnabled(false);
+        taskcard1.setBackgroundColor(Color.parseColor("#b00020"));
         taskcard2.setEnabled(false);
+        taskcard2.setBackgroundColor(Color.parseColor("#b00020"));
         taskcard3.setEnabled(false);
-        taskcard4.setEnabled(false);
-        taskcard5.setEnabled(false);
+        taskcard3.setBackgroundColor(Color.parseColor("#b00020"));
 
-        ipcard = findViewById(R.id.ipCard);
+        taskcard4.setEnabled(false);
+        taskcard4.setBackgroundColor(Color.parseColor("#b00020"));
+
+        taskcard5.setEnabled(false);
+        taskcard5.setBackgroundColor(Color.parseColor("#b00020"));
+
+        usp = new TaskSharedPref(TaskActivity.this);
+
 
         txtTaskstatus1 = findViewById(R.id.txttaskstatus1);
         txtTaskstatus2 = findViewById(R.id.txttaskstatus2);
@@ -83,21 +98,6 @@ public class TaskActivity extends AppCompatActivity {
 
         txtResetTask = findViewById(R.id.txtResetTask);
 
-        ipcard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(TaskActivity.this,TestIP.class));
-            }
-        });
-
-        if(task1!=null && task2!=null && task3!=null && task4!=null && task5!=null)
-        {
-
-        }
-        else{
-            Snackbar.make(rootlayout, "Couldnt Load the data", Snackbar.LENGTH_LONG)
-                    .show();
-        }
 
         taskcard1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,9 +217,9 @@ public class TaskActivity extends AppCompatActivity {
 //                    int imp = Integer.valueOf(task1.getImpressions());
 //                    Log.d("impression","i="+imp);
 
-                int impressions = task1.getimp();
-                int clicks = task1.getclks();
-                long timestamp = task1.getTimestamp();
+//                int impressions = task1.getimp();
+//                int clicks = task1.getclks();
+//                long timestamp = task1.getTimestamp();
 
 
             }
@@ -242,13 +242,10 @@ public class TaskActivity extends AppCompatActivity {
 //                    taskone.setText(String.valueOf(task1.getImpressions()));
 //                    int imp = Integer.valueOf(task1.getImpressions());
 //                    Log.d("impression","i="+imp);
-                int impressions = task2.getimp();
-                int clicks = task2.getclks();
-                long timestamp = task2.getTimestamp();
+//                int impressions = task2.getimp();
+//                int clicks = task2.getclks();
+//                long timestamp = task2.getTimestamp();
 
-                Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
-                intent.putExtra("task","task2");
-                startActivity(intent);
             }
 
             @Override
@@ -269,13 +266,10 @@ public class TaskActivity extends AppCompatActivity {
 //                    taskone.setText(String.valueOf(task1.getImpressions()));
 //                    int imp = Integer.valueOf(task1.getImpressions());
 //                    Log.d("impression","i="+imp);
-                int impressions = task3.getimp();
-                int clicks = task3.getclks();
-                long timestamp = task3.getTimestamp();
+//                int impressions = task3.getimp();
+//                int clicks = task3.getclks();
+//                long timestamp = task3.getTimestamp();
 
-                Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
-                intent.putExtra("task","task3");
-                startActivity(intent);
             }
 
             @Override
@@ -296,13 +290,10 @@ public class TaskActivity extends AppCompatActivity {
 //                    taskone.setText(String.valueOf(task1.getImpressions()));
 //                    int imp = Integer.valueOf(task1.getImpressions());
 //                    Log.d("impression","i="+imp);
-                int impressions = task4.getimp();
-                int clicks = task4.getclks();
-                long timestamp = task4.getTimestamp();
+//                int impressions = task4.getimp();
+//                int clicks = task4.getclks();
+//                long timestamp = task4.getTimestamp();
 
-                Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
-                intent.putExtra("task","task4");
-                startActivity(intent);
             }
 
             @Override
@@ -322,13 +313,10 @@ public class TaskActivity extends AppCompatActivity {
 //                    taskone.setText(String.valueOf(task1.getImpressions()));
 //                    int imp = Integer.valueOf(task1.getImpressions());
 //                    Log.d("impression","i="+imp);
-                int impressions = task5.getimp();
-                int clicks = task5.getclks();
-                long timestamp = task5.getTimestamp();
+//                int impressions = task5.getimp();
+//                int clicks = task5.getclks();
+//                long timestamp = task5.getTimestamp();
 
-                Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
-                intent.putExtra("task","task5");
-                startActivity(intent);
             }
 
             @Override
@@ -341,6 +329,84 @@ public class TaskActivity extends AppCompatActivity {
 
         };
         mDatabasetask5.addListenerForSingleValueEvent(taskLishtenr5);
+
+        Toast.makeText(TaskActivity.this, "taskNumber "+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
+
+                    if(usp.getTaskNumber() == 1)
+                    {
+                        taskcard1.setEnabled(true);
+                        taskcard1.setBackgroundColor(Color.parseColor("#388E3C"));
+                        taskcard2.setEnabled(false);
+                        taskcard2.setBackgroundColor(Color.parseColor("#b00020"));
+                        taskcard3.setEnabled(false);
+                        taskcard3.setBackgroundColor(Color.parseColor("#b00020"));
+
+                        taskcard4.setEnabled(false);
+                        taskcard4.setBackgroundColor(Color.parseColor("#b00020"));
+
+                        taskcard5.setEnabled(false);
+                        taskcard5.setBackgroundColor(Color.parseColor("#b00020"));
+                    }
+                    else if(usp.getTaskNumber() == 2)
+                    {
+                        taskcard2.setEnabled(true);
+                        taskcard2.setBackgroundColor(Color.parseColor("#388E3C"));
+                        taskcard1.setEnabled(false);
+                        taskcard1.setBackgroundColor(Color.parseColor("#b00020"));
+                        taskcard3.setEnabled(false);
+                        taskcard3.setBackgroundColor(Color.parseColor("#b00020"));
+
+                        taskcard4.setEnabled(false);
+                        taskcard4.setBackgroundColor(Color.parseColor("#b00020"));
+
+                        taskcard5.setEnabled(false);
+                        taskcard5.setBackgroundColor(Color.parseColor("#b00020"));
+
+                    }
+                    else if(usp.getTaskNumber()==3)
+                    {
+                        taskcard3.setEnabled(true);
+                        taskcard3.setBackgroundColor(Color.parseColor("#388E3C"));
+                        taskcard1.setEnabled(false);
+                        taskcard1.setBackgroundColor(Color.parseColor("#b00020"));
+                        taskcard2.setEnabled(false);
+                        taskcard2.setBackgroundColor(Color.parseColor("#b00020"));
+
+                        taskcard4.setEnabled(false);
+                        taskcard4.setBackgroundColor(Color.parseColor("#b00020"));
+
+                        taskcard5.setEnabled(false);
+                        taskcard5.setBackgroundColor(Color.parseColor("#b00020"));
+                    }
+                    else if(usp.getTaskNumber() == 4)
+                    {
+                        taskcard4.setEnabled(true);
+                        taskcard4.setBackgroundColor(Color.parseColor("#388E3C"));
+                        taskcard1.setEnabled(false);
+                        taskcard1.setBackgroundColor(Color.parseColor("#b00020"));
+                        taskcard2.setEnabled(false);
+                        taskcard2.setBackgroundColor(Color.parseColor("#b00020"));
+                        taskcard3.setEnabled(false);
+                        taskcard3.setBackgroundColor(Color.parseColor("#b00020"));
+                        taskcard5.setEnabled(false);
+                        taskcard5.setBackgroundColor(Color.parseColor("#b00020"));
+                    }
+                    else if(usp.getTaskNumber() == 5)
+                    {
+                        taskcard5.setEnabled(true);
+                        taskcard5.setBackgroundColor(Color.parseColor("#388E3C"));
+                        taskcard1.setEnabled(false);
+                        taskcard1.setBackgroundColor(Color.parseColor("#b00020"));
+                        taskcard2.setEnabled(false);
+                        taskcard2.setBackgroundColor(Color.parseColor("#b00020"));
+                        taskcard3.setEnabled(false);
+                        taskcard3.setBackgroundColor(Color.parseColor("#b00020"));
+
+                        taskcard4.setEnabled(false);
+                        taskcard4.setBackgroundColor(Color.parseColor("#b00020"));
+
+                    }
+
     }
 
     @Override
