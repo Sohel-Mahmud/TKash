@@ -126,6 +126,8 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
         loadRewardedVideo();
 
+        Log.d("lifecycle","onCreate");
+
         progressImp = (CircularProgressBar)findViewById(R.id.progressBarImp);
         progressclks = (CircularProgressBar)findViewById(R.id.progressBarClks);
         btnProceed = (Button)findViewById(R.id.btn_proceed);
@@ -229,6 +231,8 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                 }
                 else
                 {
+                    Snackbar.make(taskDetailslayout, "Can't load the video, try again!", Snackbar.LENGTH_LONG)
+                            .show();
                     loadRewardedVideo();
                 }
 
@@ -529,6 +533,8 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
     @Override
     protected void onStart() {
+        Log.d("lifecycle","onStart");
+
         super.onStart();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -569,6 +575,8 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
     @Override
     protected void onDestroy() {
+        Log.d("lifecycle","onDestroy");
+
         if (mAdView != null) {
             mAdView.destroy();
         }
@@ -579,36 +587,26 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
     }
     @Override
     public void onPause() {
+        Log.d("lifecycle","onPause");
+
         if (mAdView != null) {
             mAdView.pause();
         }
         mRewardedVideoAd.pause(this);
         super.onPause();
-//        if(Escaped)
-//        {
-//            countDownTimer = new CountDownTimer(4000,1000) {
-//                @Override
-//                public void onTick(long millisUntilFinished) {
-//
-//                    Toast.makeText(TaskDetailsActivity.this, "Wait"+millisUntilFinished / 1000, Toast.LENGTH_SHORT).show();
-//                }
-//
-//                @Override
-//                public void onFinish() {
-//                    Toast.makeText(TaskDetailsActivity.this, "Ok", Toast.LENGTH_SHORT).show();
-//                }
-//            }.start();
-//        }
-//        Toast.makeText(TaskDetailsActivity.this, "Ok", Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onResume() {
+        Log.d("lifecycle","onResume");
+
         if (mAdView != null) {
             mAdView.resume();
         }
         mRewardedVideoAd.resume(this);
+        //for viewing ad when activity regains it focus
+        loadInterstitial();
         super.onResume();
 
     }

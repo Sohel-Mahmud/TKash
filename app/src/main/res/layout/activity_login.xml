@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_action_phone"
                     android:maxLength="15"
-                    android:hint="Phone"
+                    android:text="+88"
                     android:inputType="phone"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>

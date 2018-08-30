@@ -84,7 +84,7 @@ public class TaskProcess extends AppCompatActivity {
     }
 
     private void setTimerForGoingBack() {
-        countDownTimer = new CountDownTimer(4000,1000) {
+        countDownTimer = new CountDownTimer(5000,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 txtWait.setTextColor(getResources().getColor(R.color.errorcolor));
