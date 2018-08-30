@@ -186,6 +186,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                 {
                     Snackbar.make(taskDetailslayout, "Couldn't Load the verifier ", Snackbar.LENGTH_LONG)
                             .show();
+                    GetIp();
                 }
                 else if(questions == 30 && clks == 1)
                 {
@@ -209,7 +210,10 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                     {
 //                        startActivity(new Intent(TaskDetailsActivity.this, TaskProcess.class));
                         Snackbar.make(taskDetailslayout, "Couldn't Load the Data and Verifier", Snackbar.LENGTH_LONG)
-                                .show();                    }
+                                .show();
+                        interstitialAd.loadAd(new AdRequest.Builder().build());
+
+                    }
 //                    finish();
                 }
             }
@@ -222,6 +226,10 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                 if(mRewardedVideoAd.isLoaded())
                 {
                     mRewardedVideoAd.show();
+                }
+                else
+                {
+                    loadRewardedVideo();
                 }
 
             }
@@ -561,12 +569,13 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (mAdView != null) {
             mAdView.destroy();
         }
         mDatabasetask.removeEventListener(valueEventListener);
         mRewardedVideoAd.destroy(this);
+        super.onDestroy();
+
     }
     @Override
     public void onPause() {
@@ -596,11 +605,12 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
     @Override
     public void onResume() {
-        super.onResume();
         if (mAdView != null) {
             mAdView.resume();
         }
         mRewardedVideoAd.resume(this);
+        super.onResume();
+
     }
 
     @Override

@@ -280,7 +280,7 @@ public class LoginActivity extends AppCompatActivity {
             final String user_id = mAuth.getCurrentUser().getUid();
             mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users");
 
-            mDatabaseUsers.addValueEventListener(new ValueEventListener() {
+            mDatabaseUsers.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.hasChild(user_id))
@@ -297,11 +297,13 @@ public class LoginActivity extends AppCompatActivity {
 //                        Intent intent = new Intent(LoginActivity.this,AccountSetupActivity.class);
 //                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //                        startActivity(intent);
+                        UserDetails userDetails = new UserDetails(phoneNumber,userName,"active",0.0);
 
-                        mDatabaseUsers.child(user_id).child("userName").setValue(userName);
-                        mDatabaseUsers.child(user_id).child("userPhone").setValue(phoneNumber);
-                        mDatabaseUsers.child(user_id).child("currentBalance").setValue(0.0);
-                        mDatabaseUsers.child(user_id).child("accStatus").setValue("active");
+                        mDatabaseUsers.child(user_id).setValue(userDetails);
+//                        mDatabaseUsers.child(user_id).child("userName").setValue(userName);
+//                        mDatabaseUsers.child(user_id).child("userPhone").setValue(phoneNumber);
+//                        mDatabaseUsers.child(user_id).child("currentBalance").setValue(0.0);
+//                        mDatabaseUsers.child(user_id).child("accStatus").setValue("active");
                         Toast.makeText(LoginActivity.this, "Success!!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
