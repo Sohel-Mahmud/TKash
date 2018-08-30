@@ -80,7 +80,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
-                            android:text="Impressions"
+                            android:text="Questions"
                             android:textColor="@color/colorPrimary"
                             android:textSize="14dp" />
                     </RelativeLayout>
@@ -145,7 +145,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
-                            android:text="Clicks"
+                            android:text="Chap"
                             android:textColor="@color/colorPrimary"
                             android:textSize="14sp" />
                     </RelativeLayout>
@@ -208,7 +208,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             ads:adSize="BANNER"
-            ads:adUnitId="@string/BannerTestAdUnitId"
+            ads:adUnitId="@string/secondBannerAdUnitId"
             ads:layout_constraintBottom_toBottomOf="parent">
         </com.google.android.gms.ads.AdView>
 

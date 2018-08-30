@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity
     private DatabaseReference mDatabaseWithdraw;
     private DatabaseReference mDatabaseWelcome;
 
-    private AdView mAdView;
 
     public UpdateLink updateLink;
 
@@ -108,7 +107,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        MobileAds.initialize(this, String.valueOf(R.string.admobTestId));
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -129,9 +127,7 @@ public class MainActivity extends AppCompatActivity
 
         mainGrid = (android.support.v7.widget.GridLayout)findViewById(R.id.mainGrid);
 
-        mAdView = findViewById(R.id.adView);
 
-        bannerAdRequest();
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -199,64 +195,7 @@ public class MainActivity extends AppCompatActivity
         queue2.add(jsonObjectRequest);
     }
 
-    private void bannerAdRequest() {
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("2C750EBF11C8D60CC8D31D18C832AFEB")
-                .build();
-        mAdView.loadAd(adRequest);
-        if(adRequest.isTestDevice(this)){
-            Toast.makeText(this, "Its a test device", Toast.LENGTH_SHORT).show();
-            Log.d("test device", "onCreate: test device running ");
-        }
 
-        mAdView.setAdListener(new AdListener(){
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-            }
-
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                super.onAdLeftApplication();
-                try{
-                    mDatabaseUserDetails.child("accStatus").setValue("Banned");
-                    Toast.makeText(MainActivity.this, "You've done something terrible!!", Toast.LENGTH_LONG).show();
-
-//                    Log.d("adopenadmissclicked","missclicked"+adMissclicked);
-                }catch (Exception e)
-                {
-                    Toast.makeText(MainActivity.this, "Error "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onAdOpened() {
-                super.onAdOpened();
-
-            }
-
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-            }
-
-            @Override
-            public void onAdClicked() {
-                super.onAdClicked();
-            }
-
-            @Override
-            public void onAdImpression() {
-                super.onAdImpression();
-            }
-        });
-
-    }
 
     private void setSingleEvent(GridLayout mainGrid) {
 
@@ -696,29 +635,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    @Override
-    public void onPause() {
-        if (mAdView != null) {
-            mAdView.pause();
-        }
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mAdView != null) {
-            mAdView.resume();
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        if (mAdView != null) {
-            mAdView.destroy();
-        }
-        super.onDestroy();
-    }
 
 
     @Override

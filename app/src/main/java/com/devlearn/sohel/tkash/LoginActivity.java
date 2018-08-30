@@ -90,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
@@ -210,8 +211,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 //                dialog.dismiss();
-                waitingDialog = new SpotsDialog(LoginActivity.this);
-                waitingDialog.show();
                 //disable sign in button while processing
 //                btnLogin.setEnabled(false);
 
@@ -219,7 +218,6 @@ public class LoginActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(edtVerificationCode.getText().toString())) {
 //                    edtVerificationCode.setError("Enter verification Code");
 //                    requestFocus(layout_verification.findViewById(R.id.edtVerificationCode));
-                    waitingDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "Insert Code", Toast.LENGTH_LONG).show();
 
                 }
@@ -266,7 +264,6 @@ public class LoginActivity extends AppCompatActivity {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The verification code entered was invalid
                                 String error = task.getException().getMessage();
-                                waitingDialog.dismiss();
                                 Snackbar.make(rootlayout, "Invalid " + error, Snackbar.LENGTH_LONG)
                                         .show();
                                 Log.d("Error fire2",error);
@@ -288,12 +285,12 @@ public class LoginActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.hasChild(user_id))
                     {
-                        waitingDialog.dismiss();
                         Toast.makeText(LoginActivity.this, "Welcome!!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
+
                     }
                     else
                     {
@@ -305,7 +302,6 @@ public class LoginActivity extends AppCompatActivity {
                         mDatabaseUsers.child(user_id).child("userPhone").setValue(phoneNumber);
                         mDatabaseUsers.child(user_id).child("currentBalance").setValue(0.0);
                         mDatabaseUsers.child(user_id).child("accStatus").setValue("active");
-                        waitingDialog.dismiss();
                         Toast.makeText(LoginActivity.this, "Success!!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

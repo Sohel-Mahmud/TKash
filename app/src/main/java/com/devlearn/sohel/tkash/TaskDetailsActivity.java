@@ -109,7 +109,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
         mDatabasetask = FirebaseDatabase.getInstance().getReference().child("Tasks").child(user_id).child(taskNumber);
         mDatabaseUserDetails = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
 
-        MobileAds.initialize(this,String.valueOf(R.string.admobTestId));
+        MobileAds.initialize(this,getString(R.string.admobAppId));
 //        MobileAds.initialize(this,"ca-app-pub-3940256099942544/5224354917");
 
         mAdView = findViewById(R.id.adViewInTask);
@@ -230,7 +230,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
     }
 
     private void bannerAdRequest() {
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("2C750EBF11C8D60CC8D31D18C832AFEB").build();
+        AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
         mAdView.setAdListener(new AdListener(){
@@ -329,7 +329,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
     private void loadRewardedVideo() {
         if(!mRewardedVideoAd.isLoaded())
         {
-            mRewardedVideoAd.loadAd("ca-app-pub-3940256099942544/5224354917",
+            mRewardedVideoAd.loadAd(getString(R.string.RewardVideo),
                     new AdRequest.Builder().build());
         }
 
@@ -348,7 +348,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
     private void loadInterstitial() {
         interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        interstitialAd.setAdUnitId(getString(R.string.InterstitialAd));
         interstitialAd.loadAd(new AdRequest.Builder().build());
 
         interstitialAd.setAdListener(new AdListener(){
@@ -373,7 +373,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                 {
                     final int finalClicks = clks+1;
 
-                    countDownTimer2 = new CountDownTimer(10000,1000) {
+                    countDownTimer2 = new CountDownTimer(15000,1000) {
                         @Override
                         public void onTick(long millisUntilFinished) {
 
@@ -383,7 +383,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                         @Override
                         public void onFinish() {
                         try{
-                        cutoff = new Date().getTime() + TimeUnit.MILLISECONDS.convert(2, TimeUnit.HOURS);
+                        cutoff = new Date().getTime() + TimeUnit.MILLISECONDS.convert(90, TimeUnit.MINUTES);
                         Log.d("Getlong","cutoff "+cutoff);
                         double addBalance = currentBalance+0.75;
                         mDatabasetask.child("clks").setValue(finalClicks);
@@ -423,7 +423,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
                         }catch (Exception e)
                         {
-                        Toast.makeText(TaskDetailsActivity.this, "Error adding Balance"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TaskDetailsActivity.this, "Error adding"+e.getMessage(), Toast.LENGTH_SHORT).show();
                         Log.d("Error adding Balance","errrr!"+e.getMessage());
 
                         }

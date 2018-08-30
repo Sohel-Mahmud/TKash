@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'tkash'
+            keyPassword 'cosine60'
+            storeFile file('F:/New_Projects/Tkashkeystore.jks')
+            storePassword 'cosine60'
+        }
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.devlearn.sohel.tkash"
@@ -14,12 +22,14 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable true
+            signingConfig signingConfigs.config
         }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:animated-vector-drawable:27.1.1'
@@ -44,6 +54,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
 }
 apply plugin: 'com.google.gms.google-services'
