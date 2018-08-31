@@ -201,6 +201,10 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="180dp"
             android:text="Reset" />
+        <TextView
+            android:id="@+id/mlog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/adViewInTask"
             android:layout_width="match_parent"

@@ -94,7 +94,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
     private long timestamp, currentTimeStamp;
     private long cutoff;
-
+    private TextView mlog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +108,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
         mDatabasetask = FirebaseDatabase.getInstance().getReference().child("Tasks").child(user_id).child(taskNumber);
         mDatabaseUserDetails = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+        mlog = findViewById(R.id.mlog);
 
         MobileAds.initialize(this,getString(R.string.admobAppId));
 //        MobileAds.initialize(this,"ca-app-pub-3940256099942544/5224354917");
@@ -184,19 +185,19 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
         btnProceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ipCheck==null)
-                {
-                    Snackbar.make(taskDetailslayout, "Couldn't Load the verifier ", Snackbar.LENGTH_LONG)
-                            .show();
-                    GetIp();
-                }
-                else if(questions == 30 && clks == 1)
+//                if(ipCheck==null)
+//                {
+//                    Snackbar.make(taskDetailslayout, "Couldn't Load the verifier ", Snackbar.LENGTH_LONG)
+//                            .show();
+//                    GetIp();
+//                }
+                if(questions == 30 && clks == 1)
                 {
                     Toast.makeText(TaskDetailsActivity.this, "Your task is over, go to next task or You can reset task", Toast.LENGTH_LONG).show();
                 }
                 else {
 
-                    if(interstitialAd.isLoaded() && ipCheck.getCountry().equals("Bangladesh"))
+                    if(interstitialAd.isLoaded())
                     {
                         interstitialAd.show();
                         if(questions<30 && !adMissclicked)
@@ -231,9 +232,9 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                 }
                 else
                 {
-                    Snackbar.make(taskDetailslayout, "Can't load the video, try again!", Snackbar.LENGTH_LONG)
-                            .show();
-                    loadRewardedVideo();
+//                    Snackbar.make(taskDetailslayout, "Can't load the video, try again!", Snackbar.LENGTH_LONG)
+//                            .show();
+                    resetTasks();
                 }
 
             }
@@ -343,6 +344,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
         {
             mRewardedVideoAd.loadAd(getString(R.string.RewardVideo),
                     new AdRequest.Builder().build());
+
         }
 
     }
@@ -568,8 +570,8 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
         } else {
             Toast.makeText(this, "Problem with Login", Toast.LENGTH_SHORT).show();
         }
-
-        GetIp();
+        loadRewardedVideo();
+        //GetIp();
 
     }
 
@@ -607,13 +609,14 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
         mRewardedVideoAd.resume(this);
         //for viewing ad when activity regains it focus
         loadInterstitial();
+        //GetIp();
         super.onResume();
 
     }
 
     @Override
     public void onRewardedVideoAdLoaded() {
-
+        mlog.append("video loaded\n");
     }
 
     @Override
@@ -635,7 +638,8 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
     public void onRewarded(RewardItem rewardItem) {
 
         resetTasks();
-        Toast.makeText(this, "Your reward!!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "onRewarded! currency: " + rewardItem.getType() + "  amount: " +
+                rewardItem.getAmount(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
