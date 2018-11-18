@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "112506099030",
+    "firebase_url": "https://tkash-32cf5.firebaseio.com",
+    "project_id": "tkash-32cf5",
+    "storage_bucket": "tkash-32cf5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:112506099030:android:80ee2197594c6533",
+        "android_client_info": {
+          "package_name": "com.devlearn.sohel.tkash"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "112506099030-f9fihkjic95ilhl5850eamsi2ljltrao.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.devlearn.sohel.tkash",
+            "certificate_hash": "3caf421f787563ed42489b1ba2e8994edd5124a7"
+          }
+        },
+        {
+          "client_id": "112506099030-st3pdq6ve16ugqgrlcv38mhq5gctk3ih.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.devlearn.sohel.tkash",
+            "certificate_hash": "c35682e588beca70d4e88d2a1e81af6ad41663ac"
+          }
+        },
+        {
+          "client_id": "112506099030-obab90cuhhsdb72rkgbigtfut0lu54r7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtKFG9NuGOlR7vJUrhjlIv1aCS3LOJ_Ok"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "112506099030-obab90cuhhsdb72rkgbigtfut0lu54r7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
