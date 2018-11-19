@@ -63,6 +63,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import dmax.dialog.SpotsDialog;
 
@@ -279,7 +280,7 @@ public class MainActivity extends AppCompatActivity
                     withdrawNumber = edtWithdrawNumber.getText().toString();
                     withdrawAmount = Double.valueOf(edtWithdrawAmount.getText().toString());
 
-                    Toast.makeText(MainActivity.this, "Success!!"+numberProvider+" "+withdrawNumber+selectedId+" "+selectedId2+"Amount "+withdrawAmount, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainActivity.this, "Success!!"+numberProvider+" "+withdrawNumber+selectedId+" "+selectedId2+"Amount "+withdrawAmount, Toast.LENGTH_SHORT).show();
                     postWithdrawRequest(numberProvider, withdrawNumber, withdrawAmount);
                 }
                 else
@@ -377,7 +378,7 @@ public class MainActivity extends AppCompatActivity
 //            waitingDialog.dismiss();
 //            String error  = task.getException().getMessage();
 //            Toast.makeText(MainActivity.this, "Error! "+error, Toast.LENGTH_SHORT).show();
-            Toast.makeText(this, "Your can Recharge 50+points and bkash, rocket 100+points!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Your can Recharge 30+points and bkash, rocket 100+points!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -423,34 +424,34 @@ public class MainActivity extends AppCompatActivity
                         task1.put("imp",0);
                         task1.put("clks",0);
                         task1.put("timestamp", ServerValue.TIMESTAMP);
-                        task1.put("status", "Running");
+                        task1.put("limitImp", getRandomNumberImp());
                         mDatabaseTask.child(user_id).child("task1").setValue(task1);
 
                         task2.put("imp",0);
                         task2.put("clks",0);
                         task2.put("timestamp", ServerValue.TIMESTAMP);
-                        task2.put("status", "Running");
+                        task2.put("limitImp", getRandomNumberImp());
                         mDatabaseTask.child(user_id).child("task2").setValue(task2);
 
 
                         task3.put("imp",0);
                         task3.put("clks",0);
                         task3.put("timestamp", ServerValue.TIMESTAMP);
-                        task3.put("status", "Running");
+                        task3.put("limitImp", getRandomNumberImp());
                         mDatabaseTask.child(user_id).child("task3").setValue(task3);
 
 
                         task4.put("imp",0);
                         task4.put("clks",0);
                         task4.put("timestamp", ServerValue.TIMESTAMP);
-                        task4.put("status", "Running");
+                        task4.put("limitImp", getRandomNumberImp());
                         mDatabaseTask.child(user_id).child("task4").setValue(task4);
 
 
                         task5.put("imp",0);
                         task5.put("clks",0);
                         task5.put("timestamp", ServerValue.TIMESTAMP);
-                        task5.put("status", "Running");
+                        task5.put("limitImp", getRandomNumberImp());
                         mDatabaseTask.child(user_id).child("task5").setValue(task5);
 
 
@@ -487,6 +488,12 @@ public class MainActivity extends AppCompatActivity
         }
 
 
+
+    }
+
+    private int getRandomNumberImp(){
+        Random rand = new Random();
+        return (25 + rand.nextInt((30 - 25) + 1));
 
     }
 
@@ -600,7 +607,7 @@ public class MainActivity extends AppCompatActivity
                     double version = updateLink.getVersion();
                     String url = updateLink.getUrl();
 
-                    if(version != 1.1)
+                    if(version != 1.2)
                     {
                         AlertForUpdate(url);
                     }

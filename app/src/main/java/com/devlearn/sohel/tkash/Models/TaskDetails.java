@@ -5,35 +5,36 @@ public class TaskDetails {
 
     private long timestamp;
 
-    private String status;
+    private int limitImp;
 
 
     public TaskDetails(){
 
     }
 
-    public TaskDetails(int imp, int clks, long timestamp, String status) {
+    public TaskDetails(int imp, int clks, long timestamp, int limitImp) {
         this.imp = imp;
         this.clks = clks;
         this.timestamp = timestamp;
-        this.status = status;
+        this.limitImp = limitImp;
     }
 
-    public int getimp() {
+    public int getImp() {
         return imp;
     }
 
-    public void setimp(int imp) {
+    public void setImp(int imp) {
         this.imp = imp;
     }
 
-    public int getclks() {
+    public int getClks() {
         return clks;
     }
 
-    public void setclks(int clks) {
+    public void setClks(int clks) {
         this.clks = clks;
     }
+
     public long getTimestamp() {
         return timestamp;
     }
@@ -41,11 +42,12 @@ public class TaskDetails {
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
-    public String getStatus() {
-        return status;
+
+    public int getLimitImp() {
+        return limitImp;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setLimitImp(int limitImp) {
+        this.limitImp = limitImp;
     }
 }

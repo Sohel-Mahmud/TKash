@@ -49,6 +49,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class TaskDetailsActivity extends AppCompatActivity implements RewardedVideoAdListener{
@@ -75,7 +76,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
     private ValueEventListener valueEventListener;
 
-    private int questions, clks;
+    private int questions, clks, impLimit;
     private String status = "Running";
 
     private RewardedVideoAd mRewardedVideoAd;
@@ -92,9 +93,11 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
     private double currentBalance;
 
-    private long timestamp, currentTimeStamp;
+    private long timestamp;
+    private long currentTimeStamp;
     private long cutoff;
     private TextView mlog;
+    private double estimatedServerTimeMs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,25 +143,46 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 //        btnReset.setEnabled(true);
 
         try{
+            DatabaseReference offsetRef = FirebaseDatabase.getInstance().getReference(".info/serverTimeOffset");
+            offsetRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    double offset = snapshot.getValue(Double.class);
+                    currentTimeStamp = (long) (System.currentTimeMillis() + offset);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    System.err.println("Listener was cancelled");
+                }
+            });
+
+
             valueEventListener = mDatabasetask.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     task = new TaskDetails();
                     task = dataSnapshot.getValue(TaskDetails.class);
 
-                    questions = task.getimp();
-                    clks = task.getclks();
+                    questions = task.getImp();
+                    clks = task.getClks();
+                    impLimit = task.getLimitImp();
                     timestamp = task.getTimestamp();
 
                     Log.d("Getlong","timestamp:"+timestamp);
 
-                    currentTimeStamp = new Date().getTime() + TimeUnit.MILLISECONDS.convert(40, TimeUnit.SECONDS);
+                    //currentTimeStamp = new Date().getTime() + TimeUnit.MILLISECONDS.convert(40, TimeUnit.SECONDS);
 
-                    Log.d("Getlong","currenttime:"+currentTimeStamp);
+
+                    Log.d("Time","currentTimeStamp:"+currentTimeStamp);
+                    Log.d("Time","CurrentTime new date.gettime"+new Date().getTime());
+                    Log.d("Time","CurrentTime Server"+(long)estimatedServerTimeMs);
+
 
 
                     progressImp.setProgress((float)questions);
-                    txtImp.setText(String.valueOf(questions)+"/30");
+                    progressImp.setMaximum((float)impLimit);
+                    txtImp.setText(String.valueOf(questions)+"/"+String.valueOf(impLimit));
 
                     progressclks.setProgress((float)clks);
                     txtclks.setText(String.valueOf(clks)+"/1");
@@ -191,7 +215,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 //                            .show();
 //                    GetIp();
 //                }
-                if(questions == 30 && clks == 1)
+                if(questions == impLimit && clks == 1)
                 {
                     Toast.makeText(TaskDetailsActivity.this, "Your task is over, go to next task or You can reset task", Toast.LENGTH_LONG).show();
                 }
@@ -200,7 +224,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                     if(interstitialAd.isLoaded())
                     {
                         interstitialAd.show();
-                        if(questions<30 && !adMissclicked)
+                        if(questions<impLimit && !adMissclicked)
                         {
                             int finalImpression = questions+1;
                             mDatabasetask.child("imp").setValue(finalImpression);
@@ -298,7 +322,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
     }
 
     private void startResetCounting() {
-        if(questions == 30 && clks == 1)
+        if(questions == impLimit && clks == 1)
         {
             if(currentTimeStamp<timestamp)
             {
@@ -354,10 +378,15 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                 Map<String, Object> newValues = new HashMap<>();
                 newValues.put("clks",0);
                 newValues.put("imp",0);
-                newValues.put("status","Running");
+                newValues.put("limitImp", getRandomNumberImp());
                 newValues.put("timestamp",ServerValue.TIMESTAMP);
 
                 mDatabasetask.setValue(newValues);
+    }
+    private int getRandomNumberImp(){
+        Random rand = new Random();
+        return (25 + rand.nextInt((30 - 25) + 1));
+
     }
 
     private void loadInterstitial() {
@@ -383,7 +412,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
             @Override
             public void onAdLeftApplication() {
                 Escaped = true;
-                if(questions==30)
+                if(questions==impLimit)
                 {
                     final int finalClicks = clks+1;
 
@@ -397,7 +426,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                         @Override
                         public void onFinish() {
                         try{
-                        cutoff = new Date().getTime() + TimeUnit.MILLISECONDS.convert(90, TimeUnit.MINUTES);
+                        cutoff = new Date().getTime() + TimeUnit.MILLISECONDS.convert(300, TimeUnit.MINUTES);
                         Log.d("Getlong","cutoff "+cutoff);
                         double addBalance = currentBalance+0.75;
                         mDatabasetask.child("clks").setValue(finalClicks);
