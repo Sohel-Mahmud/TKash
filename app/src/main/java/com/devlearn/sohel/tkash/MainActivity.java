@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity
 
     private void postWithdrawRequest(String numberProvider, String withdrawNumber, double withdrawAmount) {
 
-        if((numberProvider.equals("Mobile Recharge")) && (currentBalance>= withdrawAmount) && (withdrawAmount >=50))
+        if((numberProvider.equals("Mobile Recharge")) && (currentBalance>= withdrawAmount) && (withdrawAmount >=30))
         {
             Toast.makeText(this, "Correct withdraw", Toast.LENGTH_SHORT).show();
             waitingDialog = new SpotsDialog(MainActivity.this);
@@ -386,7 +386,7 @@ public class MainActivity extends AppCompatActivity
         //dot waitng process
         waitingDialog = new SpotsDialog(MainActivity.this);
         waitingDialog.show();
-        if(userDetails == null)
+        if(userDetails == null || ipCheck.getCountry().isEmpty())
         {
             waitingDialog.dismiss();
             alertDialogForNoInternet();
@@ -508,7 +508,7 @@ public class MainActivity extends AppCompatActivity
         AlertDialog.Builder noInternet = new AlertDialog.Builder(this);
         noInternet.setTitle("No Internet!");
         noInternet.setCancelable(false);
-        noInternet.setMessage("You have no Internet Connection!")
+        noInternet.setMessage("You have no Internet Connection or No IP information found!")
                 .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

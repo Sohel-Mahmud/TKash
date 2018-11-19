@@ -180,7 +180,8 @@ public class LoginActivity extends AppCompatActivity {
         LayoutInflater inflater = LayoutInflater.from(this);
         View layout_verification = inflater.inflate(R.layout.layout_verification,null);
 
-        final EditText edtVerificationCode = layout_verification.findViewById(R.id.edtVerificationCode);
+        //OTP code enter field
+        //final EditText edtVerificationCode = layout_verification.findViewById(R.id.edtVerificationCode);
         final TextView txtCountdown = layout_verification.findViewById(R.id.txtCountdown);
         final ProgressBar progressBar = layout_verification.findViewById(R.id.progressbar);
 
@@ -207,7 +208,8 @@ public class LoginActivity extends AppCompatActivity {
 
         dialog.setView(layout_verification);
 
-        dialog.setPositiveButton("SIGN IN", new DialogInterface.OnClickListener() {
+        //removed OTP Code enter feature
+        /*dialog.setPositiveButton("SIGN IN", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 //                dialog.dismiss();
@@ -243,7 +245,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
-        });
+        });*/
         dialog.show();
     }
 

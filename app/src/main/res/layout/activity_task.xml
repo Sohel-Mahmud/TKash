@@ -59,7 +59,7 @@
                     <TextView
                         android:layout_weight="4"
                         android:layout_marginBottom="2dp"
-                        android:text="Reward: 0.75 point"
+                        android:text="Reward: 1 point"
                         android:textAlignment="center"
                         android:background="@drawable/edittext_background2"
                         android:gravity="center"
@@ -125,7 +125,7 @@
                     <TextView
                         android:layout_weight="4"
                         android:layout_marginBottom="2dp"
-                        android:text="Reward: 0.75 point"
+                        android:text="Reward: 1 point"
                         android:textAlignment="center"
                         android:background="@drawable/edittext_background2"
                         android:gravity="center"
@@ -190,7 +190,7 @@
                     <TextView
                         android:layout_weight="4"
                         android:layout_marginBottom="2dp"
-                        android:text="Reward: 0.75 point"
+                        android:text="Reward: 1 point"
                         android:textAlignment="center"
                         android:background="@drawable/edittext_background2"
                         android:gravity="center"
@@ -255,7 +255,7 @@
                     <TextView
                         android:layout_weight="4"
                         android:layout_marginBottom="2dp"
-                        android:text="Reward: 0.75 point"
+                        android:text="Reward: 1 point"
                         android:textAlignment="center"
                         android:background="@drawable/edittext_background2"
                         android:gravity="center"
@@ -320,7 +320,7 @@
                     <TextView
                         android:layout_weight="4"
                         android:layout_marginBottom="2dp"
-                        android:text="Reward: 0.75 point"
+                        android:text="Reward: 1 point"
                         android:textAlignment="center"
                         android:background="@drawable/edittext_background2"
                         android:gravity="center"
@@ -677,7 +677,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         ads:adSize="BANNER"
-        ads:adUnitId="@string/firstBannerAdUnitId">
+        ads:adUnitId="@string/TestBannerID">
     </com.google.android.gms.ads.AdView>
 
 </RelativeLayout>

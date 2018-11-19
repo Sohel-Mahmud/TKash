@@ -110,7 +110,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
         mDatabaseUserDetails = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
         mlog = findViewById(R.id.mlog);
 
-        MobileAds.initialize(this,getString(R.string.admobAppId));
+        MobileAds.initialize(this,getString(R.string.admobTestId));
 //        MobileAds.initialize(this,"ca-app-pub-3940256099942544/5224354917");
 
         mAdView = findViewById(R.id.adViewInTask);
@@ -342,7 +342,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
     private void loadRewardedVideo() {
         if(!mRewardedVideoAd.isLoaded())
         {
-            mRewardedVideoAd.loadAd(getString(R.string.RewardVideo),
+            mRewardedVideoAd.loadAd(getString(R.string.TestRewardVideoID),
                     new AdRequest.Builder().build());
 
         }
@@ -362,7 +362,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
     private void loadInterstitial() {
         interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId(getString(R.string.InterstitialAd));
+        interstitialAd.setAdUnitId(getString(R.string.TestInterstitialID));
         interstitialAd.loadAd(new AdRequest.Builder().build());
 
         interstitialAd.setAdListener(new AdListener(){
