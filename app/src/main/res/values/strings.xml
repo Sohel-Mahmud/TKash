@@ -17,7 +17,7 @@
     <string name="firstBannerAdUnitId">ca-app-pub-2759360481725592/9797450233</string>
     <string name="secondBannerAdUnitId">ca-app-pub-2759360481725592/2380735465</string>
     <string name="InterstitialAd">ca-app-pub-2759360481725592/3339018949</string>
-    <string name="RewardVideo">ca-app-pub-2759360481725592/4835508416</string>
+    <string name="RewardVideo">ca-app-pub-2759360481725592/5383710239</string>
 
     <!--TestIds-->
 
@@ -33,20 +33,20 @@
     <string name="InterstitialTest">ca-app-pub-3940256099942544/1033173712</string>
     <string name="InerstitialTestVideo">ca-app-pub-3940256099942544/8691691433</string>
 
-    <string name="textline1">*মিনিমাম পেমেন্ট রিচার্জ- 30 টাকা</string>
+    <string name="textline1">*মিনিমাম পেমেন্ট রিচার্জ- ২১ টাকা</string>
     <string name="textline2">*মিনিমাম বিকাশ পেমেন্ট- ১০৫ টাকা</string>
     <string name="textline3">*মিমিমাম রকেট পেমেন্ট- ১০৫ টাকা</string>
     <string name="textline4">*****</string>
-    <string name="textline5">★‌ প্রতি দিন ৬০ টাকা করে Earn করতে পারবেন!</string>
+    <string name="textline5">★‌ প্রতি দিন সবোর্চ্চ ২০ টাকা করে Earn করতে পারবেন!</string>
     <string name="textline6">নিয়ম</string>
-    <string name="textline7">১) এই app এ কাজ করতে পারবেন ১ ঘন্টায় ৩০ মিনিট এ ৫ টি ট্যাক্স।</string>
+    <string name="textline7">১) এই app এ কাজ করতে পারবেন 5 ঘন্টায়  এ ৫ টি ট্যাক্স।</string>
     <string name="textline8">২) প্রতি ট্যাক্স 1 টাকা করে পাবেন।</string>
     <string name="textline9">৩) Vpn. ব্যাবহার করতে পারবে না (VPN Use করলে তার Account Blocked করা হবে )</string>
-    <string name="textline10">৪) app open করার পর start quiz click করবেন। আপনার সামনে ৫ টি ট্যাক্স দেখাবে। Task 1 click করবেন। এখানে questions এবং Chapun দেখাবে। ২৯ টা question দেখার পর ৩০ নাম্বার question আসার পর ক্লিক করতে হবে এবং ১ মিনিট অপেক্ষা করতে হবে। ১ মিনিট অপেক্ষা করার পর complete লেখা আসলে ট্যাক্স এ ফিরে আসবেন। ক্লিক করার পর যে ব্রাউজার pages ওপেন হবে সে page এ ঘুরাঘুরি করবেন। বসে থাকবেন না। ১ থেকে ৩০ নাম্বার এড ক্লিক করবেন না। ক্লিক করলে একাউন্ট বন্ধ হয়ে যাবে। তাই সাবধান এ কাজ করবেন। Task1 কাজ শেষ হলে Task 2 শুরু করবেন। এ ভাবে Task 5 পর্যন্ত কাজ করবেন। সব ট্যাক্স শেষ করার ১ ঘন্টা ৩০ মিনিট পর আবার task কাজ করতে reset বাটনে ক্লিক করবেন এবং একটি ভিডিও দেখাবে। ভিডিও দেখার সময় শেষ হলে back বাটনে ক্লিক করে task কাজ শুরু করতে পারবেন।
+    <string name="textline10">৪) app open করার পর Start Quiz click করবেন। আপনার সামনে ৫ টি ট্যাক্স দেখাবে। Task 1 click করবেন। এখানে impression এবং click দেখাবে। ২৫-৩০ টা impression ads দেখার পর impression অনেক সময় ২৫,২৬,২৭,২৮,২৯,৩০ নাম্বার ads আসার পর ads click করতে হবে এবং ১ মিনিট অপেক্ষা করতে হবে। ১ মিনিট অপেক্ষা করার পর completed লেখা দেখার পর ট্যাক্স ফিরে আসবেন। ১মিনিট শেষ হবার আগেই task ফিরে আসলে টাকা যদি যোগ হয় তাহলে withdraw সময় টাকা কেটে রাখা হবে তাই সাবধান। ads click করার পর যে browser pages open হবে সে page এ ঘুরাঘুরি করবেন। বসে থাকবেন না। ১ থেকে ৩০ নাম্বার এড এবং অন্যান্য বেনার এড ও ক্লিক করবেন না। ক্লিক করলে একাউন্ট অটোমেটিক্যালি বন্ধ হয়ে যাবে। তাই সাবধান এ কাজ করবেন। Task 1 কাজ শেষ হলে Task 2 শুরু করবেন। এ ভাবে Task 5 পর্যন্ত কাজ করবেন। সব ট্যাক্স শেষ করার পর ৫ ঘন্টা ৮ মিনিট অপেক্ষা করুন তারপর আবার Task কাজ শুরু করতে পারবেন। ৫ ঘন্টা ৮ মিনিট পর আবার task কাজ করতে rest বাটনে ক্লিক করবেন এবং একটি video দেখাবে। video দেখার সময় শেষ হলে back বাটনে ক্লিক করে task কাজ শুরু করতে পারবেন।
 </string>
     <string name="textline11">৫)  পেমেন্ট জন্য Withdraw বাটনে ক্লিক করুন। bkash/rocket/recharge নির্বাচন করুন। withdraw amount বসান এবং মোবাইল নাম্বার দিয়ে submit এ ক্লিক করুন। সব কিছু ঠিক থাকলে History তে বিবরণ দেখতে পাবেন। bkash/rocket ক্ষেত্রে একাউন্ট রেজিস্ট্রেশন নাম্বার হতে হবে।</string>
     <string name="textline12">৭) আমাদের সাথে যোগাযোগ করার লিঙ্কগুলো মেনুবার এ দেওয়া আছে, join করতে ভুলবেন না</string>
-    <string name="textline13">৮) সবাই Telegram Group এ এড হবেন</string>
+    <string name="textline13">৮) একাউন্ট ব্লক হলে প্রথম বার খোলে দিয়া হবে ২৪ ঘন্টা পর ফ্রী। এর পর থেকে ৫ টাকা করে কাটা হবে। এক সপ্তাহ ভিতরে তিন বার ব্লক হলে একাউন্ট আজীবনের জন্য বন্ধ করে দেয়া হবে।</string>
 
     <!--Telegram links-->
     <string name="telegramHelp">https://t.me/joinchat/IceMDFGYnoKRnYP-QDGYTg</string>

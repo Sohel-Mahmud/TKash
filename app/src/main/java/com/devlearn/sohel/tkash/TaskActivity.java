@@ -104,7 +104,7 @@ public class TaskActivity extends AppCompatActivity {
         txtTaskstatus5 = findViewById(R.id.txttaskstatus5);
 
 
-        MobileAds.initialize(this, getString(R.string.TestAdmobID));
+        MobileAds.initialize(this, getString(R.string.admobAppId));
         mAdView = findViewById(R.id.adView);
 
         bannerAdRequest();

@@ -113,7 +113,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
         mDatabaseUserDetails = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
         mlog = findViewById(R.id.mlog);
 
-        MobileAds.initialize(this,getString(R.string.admobTestId));
+        MobileAds.initialize(this,getString(R.string.admobAppId));
 //        MobileAds.initialize(this,"ca-app-pub-3940256099942544/5224354917");
 
         mAdView = findViewById(R.id.adViewInTask);
@@ -366,7 +366,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
     private void loadRewardedVideo() {
         if(!mRewardedVideoAd.isLoaded())
         {
-            mRewardedVideoAd.loadAd(getString(R.string.TestRewardVideoID),
+            mRewardedVideoAd.loadAd(getString(R.string.RewardVideo),
                     new AdRequest.Builder().build());
 
         }
@@ -391,7 +391,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
     private void loadInterstitial() {
         interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId(getString(R.string.TestInterstitialID));
+        interstitialAd.setAdUnitId(getString(R.string.InterstitialAd));
         interstitialAd.loadAd(new AdRequest.Builder().build());
 
         interstitialAd.setAdListener(new AdListener(){
@@ -416,7 +416,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                 {
                     final int finalClicks = clks+1;
 
-                    countDownTimer2 = new CountDownTimer(15000,1000) {
+                    countDownTimer2 = new CountDownTimer(17000,1000) {
                         @Override
                         public void onTick(long millisUntilFinished) {
 
@@ -428,7 +428,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                         try{
                         cutoff = new Date().getTime() + TimeUnit.MILLISECONDS.convert(300, TimeUnit.MINUTES);
                         Log.d("Getlong","cutoff "+cutoff);
-                        double addBalance = currentBalance+0.75;
+                        double addBalance = currentBalance+1;
                         mDatabasetask.child("clks").setValue(finalClicks);
                         mDatabasetask.child("timestamp").setValue(cutoff);
                         mDatabaseUserDetails.child("currentBalance").setValue(addBalance);

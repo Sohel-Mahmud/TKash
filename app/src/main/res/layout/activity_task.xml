@@ -677,7 +677,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         ads:adSize="BANNER"
-        ads:adUnitId="@string/TestBannerID">
+        ads:adUnitId="@string/firstBannerAdUnitId">
     </com.google.android.gms.ads.AdView>
 
 </RelativeLayout>

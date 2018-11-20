@@ -156,9 +156,17 @@ public class MainActivity extends AppCompatActivity
         StringRequest stringRequest = new StringRequest(Request.Method.GET, urlip, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                    String url ="http://ip-api.com/json/" +response;
+
+                String newResponse="";
+                for(int i=0; i<response.length(); i++){
+                    if(response.charAt(i)==','){
+                        break;
+                    }
+                    newResponse = newResponse+response.charAt(i);
+                }
+                    String url ="http://ip-api.com/json/" +newResponse;
 //                    Log.d("actuallink","link: "+url);
-                    ipCheck.setIp(response);
+                    ipCheck.setIp(newResponse);
                     getIPDetails(url);
             }
         }, new Response.ErrorListener() {
@@ -304,7 +312,7 @@ public class MainActivity extends AppCompatActivity
 
     private void postWithdrawRequest(String numberProvider, String withdrawNumber, double withdrawAmount) {
 
-        if((numberProvider.equals("Mobile Recharge")) && (currentBalance>= withdrawAmount) && (withdrawAmount >=30))
+        if((numberProvider.equals("Mobile Recharge")) && (currentBalance>= withdrawAmount) && (withdrawAmount >=21))
         {
             Toast.makeText(this, "Correct withdraw", Toast.LENGTH_SHORT).show();
             waitingDialog = new SpotsDialog(MainActivity.this);
@@ -387,7 +395,7 @@ public class MainActivity extends AppCompatActivity
         //dot waitng process
         waitingDialog = new SpotsDialog(MainActivity.this);
         waitingDialog.show();
-        if(userDetails == null || ipCheck.getCountry().isEmpty())
+        if(userDetails == null || ipCheck ==null)
         {
             waitingDialog.dismiss();
             alertDialogForNoInternet();
