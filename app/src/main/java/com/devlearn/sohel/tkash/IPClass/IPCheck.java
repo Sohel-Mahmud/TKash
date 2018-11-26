@@ -31,7 +31,7 @@ public class IPCheck{
     private String timezone;
     private String isp;
     private String ip;
-
+    private Context context;
     private String error1;
 
 
@@ -39,8 +39,8 @@ public class IPCheck{
 
     private RequestQueue queue;
 
-    public IPCheck(){
-
+    public IPCheck(Context context){
+        this.context=context;
     }
 
     public IPCheck(String country, String city, String countryCode, double latitude, double longtidue, String region, String timezone, String isp,String ip, String error1,String error2) {
@@ -57,47 +57,107 @@ public class IPCheck{
         this.error2 = error2;
     }
 
-//    public void GetIPAddress(RequestQueue queue, final RequestQueue queue2){
-//        String urlip = "http://checkip.amazonaws.com/";
-//        // alternative https://ipinfo.io/ip
-//
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, urlip, new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                String url ="http://ip-api.com/json/" +response;
-//                setIp(response);
-//                getIPDetails(url, queue2);
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                setError1("didnt work");
-//            }
-//        });
-//
-//        queue.add(stringRequest);
-//    }
-//
-//    private void getIPDetails(String url, RequestQueue queue2) {
-//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-//            @Override
-//            public void onResponse(JSONObject response) {
-//                try {
-//                    setCountry(response.getString("country"));
-//
-//                    } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                setError2("Error "+error.getMessage());
-//            }
-//        });
-//
-//        queue2.add(jsonObjectRequest);
-//    }
+    public IPCheck() {
+
+    }
+
+    public void GetIp() {
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+
+        String urlip = "http://checkip.amazonaws.com/";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, urlip, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                String newResponse="";
+                for(int i=0; i<response.length(); i++){
+                    if(response.charAt(i)==','){
+                        break;
+                    }
+                    newResponse = newResponse+response.charAt(i);
+                }
+                String url = "http://ip-api.com/json/" +newResponse;
+//                    Log.d("actuallink","link: "+url);
+                setIp(newResponse);
+                getIPDetails(url);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                setError1("Loading..");
+            }
+        });
+
+        queue.add(stringRequest);
+
+    }
+    private void getIPDetails(String url) {
+        RequestQueue queue2 = Volley.newRequestQueue(context);
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String cntry = response.getString("country");
+                    setCountry(cntry);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                setError2("Error "+error.getMessage());
+            }
+        });
+
+        queue2.add(jsonObjectRequest);
+    }
+
+/*    public void GetIPAddress(RequestQueue queue, final RequestQueue queue2){
+        String urlip = "http://checkip.amazonaws.com/";
+        // alternative https://ipinfo.io/ip
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, urlip, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                String url ="http://ip-api.com/json/" +response;
+                setIp(response);
+                getIPDetails(url, queue2);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                setError1("didnt work");
+            }
+        });
+
+        queue.add(stringRequest);
+    }
+
+    private void getIPDetails(String url, RequestQueue queue2) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    setCountry(response.getString("country"));
+
+                    } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                setError2("Error "+error.getMessage());
+            }
+        });
+
+        queue2.add(jsonObjectRequest);
+    }*/
 
     public String getError1() {
         return error1;

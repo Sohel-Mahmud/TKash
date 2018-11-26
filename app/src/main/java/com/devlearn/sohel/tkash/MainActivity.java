@@ -30,6 +30,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -37,6 +39,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.androidfung.geoip.api.ApiManager;
+import com.androidfung.geoip.model.GeoIpResponseModel;
 import com.devlearn.sohel.tkash.IPClass.IPCheck;
 import com.devlearn.sohel.tkash.Models.UpdateLink;
 import com.devlearn.sohel.tkash.Models.UserDetails;
@@ -57,10 +61,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -99,7 +110,10 @@ public class MainActivity extends AppCompatActivity
     public UpdateLink updateLink;
 
 
-    public IPCheck ipCheck;
+    //public IPCheck ipCheck;
+    private String country="Bangladesh", ip;
+    private String url;
+    private RequestQueue queue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +139,7 @@ public class MainActivity extends AppCompatActivity
         txtipdetails = findViewById(R.id.ipdetails);
         marque = findViewById(R.id.bannerMarque);
         marque.setSelected(true);
+        queue = Volley.newRequestQueue(this);
 
         mainGrid = (android.support.v7.widget.GridLayout)findViewById(R.id.mainGrid);
 
@@ -140,16 +155,37 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //GetIp();
+        GetIpInfo();
+
         //set event for gridview
         setSingleEvent(mainGrid);
 
+    }
 
+    private void GetIpInfo() {
+        ApiManager apiManager = new ApiManager(Volley.newRequestQueue(this));
+        apiManager.getGeoIpInfo(new Response.Listener<GeoIpResponseModel>() {
+            @Override
+            public void onResponse(GeoIpResponseModel response) {
+                Log.d("JSON", response.toString());
+                //This is how you get the information.
+                //not all attribute are listed
+                country = response.getCountry();
+                String city = response.getCity();
 
+                txtipdetails.setText(country+", "+city);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String errorMessage = error.toString();
+            }
+        });
     }
 
     private void GetIp() {
-        ipCheck = new IPCheck();
-        RequestQueue queue = Volley.newRequestQueue(this);
+
 
         String urlip = "http://checkip.amazonaws.com/";
 
@@ -164,44 +200,100 @@ public class MainActivity extends AppCompatActivity
                     }
                     newResponse = newResponse+response.charAt(i);
                 }
-                    String url ="http://ip-api.com/json/" +newResponse;
+                url = "http://ip-api.com/json/" +newResponse;
 //                    Log.d("actuallink","link: "+url);
-                    ipCheck.setIp(newResponse);
-                    getIPDetails(url);
+                    ip=newResponse;
+                getIPDetails(url);
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                ipCheck.setError1("Loading..");
+                Log.d("vollyerror 1",error.getMessage());
+                Toast.makeText(MainActivity.this, "IP error "+error.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                3000,
+                2,
+                2.0f
+        ));
         queue.add(stringRequest);
+
+    }
+
+    private void getIPInformation(){
+        String url = "https://ipapi.co/json";
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null,  new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("JSON", "onResponse: "+response.toString());
+//                try {
+////                    country =  response.getString("country_name");
+////                    ip = response.getString("ip");
+////                    txtipdetails.setText(country+" IP: "+ip);
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("vollyerror 2",error.getMessage());
+//                Toast.makeText(MainActivity.this, "IP error "+error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }){
+            @Override
+            protected VolleyError parseNetworkError(VolleyError volleyError) {
+                if (volleyError.networkResponse != null && volleyError.networkResponse.data != null) {
+                    volleyError = new VolleyError(new String(volleyError.networkResponse.data));
+                }
+
+                return volleyError;
+            }
+        };
+        queue.add(jsonObjectRequest);
     }
 
     private void getIPDetails(String url) {
-        RequestQueue queue2 = Volley.newRequestQueue(this);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                try {
-                    ipCheck.setCountry(response.getString("country"));
-                    txtipdetails.setText(ipCheck.getCountry()+" IP: "+ipCheck.getIp());
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    txtipdetails.setText(ipCheck.getError1());
-                }
+                Log.d("JSON", "onResponse: "+response.toString());
+//                try {
+////                    country =  response.getString("country_name");
+////                    ip = response.getString("ip");
+////                    txtipdetails.setText(country+" IP: "+ip);
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                ipCheck.setError2("Error "+error.getMessage());
+                Log.d("vollyerror 2",error.getMessage());
+//                Toast.makeText(MainActivity.this, "IP error "+error.getMessage(), Toast.LENGTH_LONG).show();
             }
-        });
+        }){
+            @Override
+            protected VolleyError parseNetworkError(VolleyError volleyError) {
+                if (volleyError.networkResponse != null && volleyError.networkResponse.data != null) {
+                    volleyError = new VolleyError(new String(volleyError.networkResponse.data));
+                }
 
-        queue2.add(jsonObjectRequest);
+                return volleyError;
+            }
+        };
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
+                3000,
+                2,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        ));
+        queue.add(jsonObjectRequest);
     }
 
 
@@ -395,7 +487,8 @@ public class MainActivity extends AppCompatActivity
         //dot waitng process
         waitingDialog = new SpotsDialog(MainActivity.this);
         waitingDialog.show();
-        if(userDetails == null || ipCheck ==null)
+
+        if(userDetails == null)
         {
             waitingDialog.dismiss();
             alertDialogForNoInternet();
@@ -405,7 +498,7 @@ public class MainActivity extends AppCompatActivity
             waitingDialog.dismiss();
             alertDialogForBanned();
         }
-        else if(!ipCheck.getCountry().equals("Bangladesh"))
+        else if(!country.equals("Bangladesh"))
         {
             waitingDialog.dismiss();
             alertDialogForUsingVPN();
@@ -630,7 +723,8 @@ public class MainActivity extends AppCompatActivity
         {
             Toast.makeText(this, "UpdateError"+ e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-        GetIp();
+        //GetIp();
+        GetIpInfo();
     }
 
     private void AlertForUpdate(final String url) {
