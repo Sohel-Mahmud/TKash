@@ -299,7 +299,7 @@ public class LoginActivity extends AppCompatActivity {
 //                        Intent intent = new Intent(LoginActivity.this,AccountSetupActivity.class);
 //                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //                        startActivity(intent);
-                        UserDetails userDetails = new UserDetails(phoneNumber,userName,"active",0.0);
+                        UserDetails userDetails = new UserDetails(phoneNumber,userName,"active","unused",0.0);
 
                         mDatabaseUsers.child(user_id).setValue(userDetails);
 //                        mDatabaseUsers.child(user_id).child("userName").setValue(userName);

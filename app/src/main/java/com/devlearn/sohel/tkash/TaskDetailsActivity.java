@@ -412,7 +412,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
             @Override
             public void onAdLeftApplication() {
                 Escaped = true;
-                if(questions==impLimit)
+                if(questions==impLimit && clks == 0)
                 {
                     final int finalClicks = clks+1;
 
@@ -506,6 +506,8 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
             @Override
             public void onAdClicked() {
+
+
             }
 
             @Override

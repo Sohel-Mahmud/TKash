@@ -43,11 +43,14 @@
             android:name=".TaskProcess"
             android:label="@string/mcq"
             android:screenOrientation="portrait" />
-        <activity android:name=".WithdrawHistoryActivity"
+        <activity
+            android:name=".WithdrawHistoryActivity"
             android:label="@string/history_title"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".TestIP"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TestIP"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ReferUser"></activity>
     </application>
 
 </manifest>

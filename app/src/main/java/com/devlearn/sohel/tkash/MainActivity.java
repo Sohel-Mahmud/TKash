@@ -708,7 +708,7 @@ public class MainActivity extends AppCompatActivity
                     double version = updateLink.getVersion();
                     String url = updateLink.getUrl();
 
-                    if(version != 1.2)
+                    if(version != 1.3)
                     {
                         AlertForUpdate(url);
                     }
@@ -812,6 +812,15 @@ public class MainActivity extends AppCompatActivity
             } catch(Exception e) {
                 //e.toString();
                 Toast.makeText(this, "Error "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }else if(id == R.id.nav_refer){
+            if(userDetails == null){
+                alertDialogForNoInternet();
+            }
+            else if( !userDetails.accStatus.equals("active")){
+                alertDialogForBanned();
+            }else{
+                startActivity(new Intent(MainActivity.this, ReferUser.class));
             }
         }
 
