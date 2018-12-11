@@ -56,6 +56,7 @@ public class TaskProcess extends AppCompatActivity {
     private Button option1,option2,option3;
 
     CountDownTimer countDownTimer;
+    private boolean aBoolean = true;
 
 
     @Override
@@ -84,12 +85,13 @@ public class TaskProcess extends AppCompatActivity {
     }
 
     private void setTimerForGoingBack() {
-        countDownTimer = new CountDownTimer(5000,1000) {
+
+    countDownTimer = new CountDownTimer(6000,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 txtWait.setTextColor(getResources().getColor(R.color.errorcolor));
                 txtWait.setText("Wait( " + millisUntilFinished / 1000+" sec)");
-                onBackPressed();
+                aBoolean= true;
             }
 
             @Override
@@ -105,7 +107,9 @@ public class TaskProcess extends AppCompatActivity {
                 else
                 {
                     txtWait.setText("Ok");
-                    TaskProcess.super.onBackPressed();
+//                    TaskProcess.super.onBackPressed();
+//                    TaskProcess.super.finish();
+                    aBoolean = false;
                 }
 
 
@@ -117,6 +121,12 @@ public class TaskProcess extends AppCompatActivity {
     public void onBackPressed() {
 
 //        super.onBackPressed();  commented this to disable the back press
+        if(aBoolean){
+
+        }
+        else{
+            super.onBackPressed();
+        }
     }
 
     private void setToggleEvent(final GridLayout ansGrid) {

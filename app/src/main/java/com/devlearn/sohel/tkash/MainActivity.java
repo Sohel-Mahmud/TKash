@@ -708,7 +708,7 @@ public class MainActivity extends AppCompatActivity
                     double version = updateLink.getVersion();
                     String url = updateLink.getUrl();
 
-                    if(version != 1.3)
+                    if(version != 1.4)
                     {
                         AlertForUpdate(url);
                     }
