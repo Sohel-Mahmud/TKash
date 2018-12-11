@@ -628,10 +628,10 @@ public class MainActivity extends AppCompatActivity
 
     private void alertDialogForBanned() {
         AlertDialog.Builder bannedDialog = new AlertDialog.Builder(this);
-        bannedDialog.setTitle("You are Banned!");
+        bannedDialog.setTitle(getString(R.string.banTitle));
         bannedDialog.setCancelable(false);
         final String url = getString(R.string.telegramAdmin);
-        bannedDialog.setMessage("Sad! You are banned for wrong activity, please contact with admins!")
+        bannedDialog.setMessage(getString(R.string.banDetails))
                 .setPositiveButton("Contact", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -732,7 +732,7 @@ public class MainActivity extends AppCompatActivity
         AlertDialog.Builder updateDialog = new AlertDialog.Builder(this);
         updateDialog.setTitle("Update Available");
         updateDialog.setCancelable(false);
-        updateDialog.setMessage("Good news! there is an update for your app, please update to proceed!!")
+        updateDialog.setMessage(getString(R.string.updateAlert))
                 .setPositiveButton("Update", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

@@ -52,4 +52,9 @@
     <string name="telegramHelp">https://t.me/joinchat/IceMDFGYnoKRnYP-QDGYTg</string>
     <string name="telegramChannel">https://t.me/Tkashsupport</string>
     <string name="telegramAdmin">https://t.me/joinchat/IceMDFD5i2ZMaA7rZ536Ag</string>
+
+    <!--Bangla Alerts-->
+    <string name="updateAlert">সুখবর! এপ এর নতুন আপডেট এসেছে, আপডেট করুন।</string>
+    <string name="banTitle">আপনাকে ব্যান করা হয়েছে!</string>
+    <string name="banDetails">উপ্স! আপনি নিয়ম না মানায় আপনাকে ব্যান করা হয়েছে, এডমিনের সাথে যোগাযোগ করুন</string>
 </resources>
