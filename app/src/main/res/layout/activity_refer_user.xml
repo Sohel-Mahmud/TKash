@@ -17,7 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
-            android:background="@drawable/free_ride_banner"
             android:layout_marginTop="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -50,7 +49,6 @@
         <RelativeLayout
             android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/bg_invite_code_large"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp"
             android:layout_width="match_parent"
@@ -95,7 +93,6 @@
             android:id="@+id/enterReferCodelayout"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/bg_invite_code_large"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp"
             android:layout_width="match_parent"
@@ -128,13 +125,12 @@
     </LinearLayout>
     <Button
         android:textSize="14sp"
-        android:textColor="#ffffff"
+        android:textColor="#000000"
         android:id="@+id/btnInvite"
         android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:background="@drawable/button_shape"
         android:text="Invite Friends"
         android:layout_alignParentBottom="true"
         android:textAllCaps="true"

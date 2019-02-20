@@ -519,7 +519,7 @@ public class MainActivity extends AppCompatActivity
                     {
                         Map<String, Object> task1 = new HashMap<>();
                         Map<String, Object> task2 = new HashMap<>();
-                        Map<String, Object> task3 = new HashMap<>();
+                        //Map<String, Object> task3 = new HashMap<>();
                         //Map<String, Object> task4 = new HashMap<>();
                         //Map<String, Object> task5 = new HashMap<>();
                         task1.put("imp",0);
@@ -529,17 +529,17 @@ public class MainActivity extends AppCompatActivity
                         mDatabaseTask.child(user_id).child("task1").setValue(task1);
 
                         task2.put("imp",0);
-                        task2.put("clks",1);
+                        task2.put("clks",0);
                         task2.put("timestamp", ServerValue.TIMESTAMP);
                         task2.put("limitImp", getRandomNumberImp());
                         mDatabaseTask.child(user_id).child("task2").setValue(task2);
 
 
-                        task3.put("imp",0);
-                        task3.put("clks",0);
-                        task3.put("timestamp", ServerValue.TIMESTAMP);
-                        task3.put("limitImp", getRandomNumberImp());
-                        mDatabaseTask.child(user_id).child("task3").setValue(task3);
+//                        task3.put("imp",0);
+//                        task3.put("clks",0);
+//                        task3.put("timestamp", ServerValue.TIMESTAMP);
+//                        task3.put("limitImp", getRandomNumberImp());
+//                        mDatabaseTask.child(user_id).child("task3").setValue(task3);
 
 
                         /*task4.put("imp",0);

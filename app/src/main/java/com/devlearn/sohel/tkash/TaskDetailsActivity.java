@@ -209,12 +209,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
         btnProceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if(ipCheck==null)
-//                {
-//                    Snackbar.make(taskDetailslayout, "Couldn't Load the verifier ", Snackbar.LENGTH_LONG)
-//                            .show();
-//                    GetIp();
-//                }
+
                 if(questions == impLimit && clks == 1)
                 {
                     Toast.makeText(TaskDetailsActivity.this, "Your task is over, go to next task or You can reset task", Toast.LENGTH_LONG).show();
@@ -231,7 +226,6 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                             Toast.makeText(TaskDetailsActivity.this, "counted!!!", Toast.LENGTH_SHORT).show();
 
                         }
-
                     }
                     else
                     {
@@ -349,6 +343,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                     }
                 }.start();
             }
+
             else
             {
                 Toast.makeText(TaskDetailsActivity.this, "Time to reset", Toast.LENGTH_SHORT).show();
@@ -375,15 +370,6 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
     private void resetTasks() {
 
-        if(taskNumber.equals("task2")){
-            Map<String, Object> newValues = new HashMap<>();
-            newValues.put("clks",1);
-            newValues.put("imp",0);
-            newValues.put("limitImp", getRandomNumberImp());
-            newValues.put("timestamp",ServerValue.TIMESTAMP);
-
-            mDatabasetask.setValue(newValues);
-        }else{
             Map<String, Object> newValues = new HashMap<>();
             newValues.put("clks",0);
             newValues.put("imp",0);
@@ -391,7 +377,6 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
             newValues.put("timestamp",ServerValue.TIMESTAMP);
 
             mDatabasetask.setValue(newValues);
-        }
 
     }
     private int getRandomNumberImp(){
@@ -455,17 +440,10 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                         }
                         else if(taskNumber.equals("task2"))
                         {
-                            usp.setTaskNumber(3);
-                            Toast.makeText(TaskDetailsActivity.this, "taskNumber"+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
-
-                        }
-                        else if(taskNumber.equals("task3"))
-                        {
                             usp.setTaskNumber(1);
                             Toast.makeText(TaskDetailsActivity.this, "taskNumber"+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
 
                         }
-
                         Toast.makeText(TaskDetailsActivity.this, "Completed!", Toast.LENGTH_LONG).show();
 
                         }catch (Exception e)
@@ -516,60 +494,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
             @Override
             public void onAdImpression() {
-                if(questions==impLimit && clks == 1 && taskNumber.equals("task2"))
-                {
-                    try{
-                        cutoff = new Date().getTime() + TimeUnit.MILLISECONDS.convert(getRandomNumberTime(), TimeUnit.MINUTES);
-                        Log.d("Getlong","cutoff "+cutoff);
-                        double addBalance = currentBalance+0.50;
-                        mDatabasetask.child("clks").setValue(1);
-                        mDatabasetask.child("timestamp").setValue(cutoff);
-                        mDatabaseUserDetails.child("currentBalance").setValue(addBalance);
 
-                        if(taskNumber.equals("task1")){
-                            usp.setTaskNumber(2);
-                            Toast.makeText(TaskDetailsActivity.this, "taskNumber"+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
-                        }
-                        else if(taskNumber.equals("task2"))
-                        {
-                            usp.setTaskNumber(3);
-                            Toast.makeText(TaskDetailsActivity.this, "taskNumber"+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
-
-                        }
-                        else if(taskNumber.equals("task3"))
-                        {
-                            usp.setTaskNumber(1);
-                            Toast.makeText(TaskDetailsActivity.this, "taskNumber"+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
-
-                        }
-
-                        Toast.makeText(TaskDetailsActivity.this, "Completed!", Toast.LENGTH_LONG).show();
-
-                    }catch (Exception e)
-                    {
-                        Toast.makeText(TaskDetailsActivity.this, "Error adding"+e.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.d("Error adding Balance","errrr!"+e.getMessage());
-
-                    }
-                }
-                else
-                {
-                    try{
-                        mDatabaseUserDetails.child("accStatus").setValue("Banned");
-                        adMissclicked = true;
-                        Toast.makeText(TaskDetailsActivity.this, "You've done something terrible!!", Toast.LENGTH_LONG).show();
-                        Intent intent =  new Intent(TaskDetailsActivity.this,MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finish();
-
-//                    Log.d("adopenadmissclicked","missclicked"+adMissclicked);
-                    }catch (Exception e)
-                    {
-                        Toast.makeText(TaskDetailsActivity.this, "Error "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-
-                }
             }
         });
     }
@@ -661,7 +586,6 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
         }
         loadRewardedVideo();
         //GetIp();
-
     }
 
     @Override

@@ -185,11 +185,6 @@
             android:id="@+id/mlog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/txtInfo"
-            android:layout_below="@id/mlog"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
         <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/adViewInTask"
             android:layout_width="match_parent"
