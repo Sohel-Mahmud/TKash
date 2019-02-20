@@ -113,7 +113,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
         mDatabaseUserDetails = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
         mlog = findViewById(R.id.mlog);
 
-        MobileAds.initialize(this,getString(R.string.admobAppId));
+        MobileAds.initialize(this,getString(R.string.admobTestId));
 //        MobileAds.initialize(this,"ca-app-pub-3940256099942544/5224354917");
 
         mAdView = findViewById(R.id.adViewInTask);
@@ -366,7 +366,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
     private void loadRewardedVideo() {
         if(!mRewardedVideoAd.isLoaded())
         {
-            mRewardedVideoAd.loadAd(getString(R.string.RewardVideo),
+            mRewardedVideoAd.loadAd(getString(R.string.TestRewardVideoID),
                     new AdRequest.Builder().build());
 
         }
@@ -375,23 +375,39 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
     private void resetTasks() {
 
-                Map<String, Object> newValues = new HashMap<>();
-                newValues.put("clks",0);
-                newValues.put("imp",0);
-                newValues.put("limitImp", getRandomNumberImp());
-                newValues.put("timestamp",ServerValue.TIMESTAMP);
+        if(taskNumber.equals("task2")){
+            Map<String, Object> newValues = new HashMap<>();
+            newValues.put("clks",1);
+            newValues.put("imp",0);
+            newValues.put("limitImp", getRandomNumberImp());
+            newValues.put("timestamp",ServerValue.TIMESTAMP);
 
-                mDatabasetask.setValue(newValues);
+            mDatabasetask.setValue(newValues);
+        }else{
+            Map<String, Object> newValues = new HashMap<>();
+            newValues.put("clks",0);
+            newValues.put("imp",0);
+            newValues.put("limitImp", getRandomNumberImp());
+            newValues.put("timestamp",ServerValue.TIMESTAMP);
+
+            mDatabasetask.setValue(newValues);
+        }
+
     }
     private int getRandomNumberImp(){
         Random rand = new Random();
-        return (25 + rand.nextInt((30 - 25) + 1));
+        return (26 + rand.nextInt((32 - 26) + 1));
+
+    }
+    private int getRandomNumberTime(){
+        Random rand = new Random();
+        return (5 + rand.nextInt((6 - 5) + 1));
 
     }
 
     private void loadInterstitial() {
         interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId(getString(R.string.InterstitialAd));
+        interstitialAd.setAdUnitId(getString(R.string.InterstitialTest));
         interstitialAd.loadAd(new AdRequest.Builder().build());
 
         interstitialAd.setAdListener(new AdListener(){
@@ -426,7 +442,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                         @Override
                         public void onFinish() {
                         try{
-                        cutoff = new Date().getTime() + TimeUnit.MILLISECONDS.convert(300, TimeUnit.MINUTES);
+                        cutoff = new Date().getTime() + TimeUnit.MILLISECONDS.convert(getRandomNumberTime(), TimeUnit.MINUTES);
                         Log.d("Getlong","cutoff "+cutoff);
                         double addBalance = currentBalance+1;
                         mDatabasetask.child("clks").setValue(finalClicks);
@@ -444,18 +460,6 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
                         }
                         else if(taskNumber.equals("task3"))
-                        {
-                            usp.setTaskNumber(4);
-                            Toast.makeText(TaskDetailsActivity.this, "taskNumber"+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
-
-                        }
-                        else if(taskNumber.equals("task4"))
-                        {
-                            usp.setTaskNumber(5);
-                            Toast.makeText(TaskDetailsActivity.this, "taskNumber"+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
-
-                        }
-                        else if(taskNumber.equals("task5"))
                         {
                             usp.setTaskNumber(1);
                             Toast.makeText(TaskDetailsActivity.this, "taskNumber"+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
@@ -512,6 +516,60 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
 
             @Override
             public void onAdImpression() {
+                if(questions==impLimit && clks == 1 && taskNumber.equals("task2"))
+                {
+                    try{
+                        cutoff = new Date().getTime() + TimeUnit.MILLISECONDS.convert(getRandomNumberTime(), TimeUnit.MINUTES);
+                        Log.d("Getlong","cutoff "+cutoff);
+                        double addBalance = currentBalance+0.50;
+                        mDatabasetask.child("clks").setValue(1);
+                        mDatabasetask.child("timestamp").setValue(cutoff);
+                        mDatabaseUserDetails.child("currentBalance").setValue(addBalance);
+
+                        if(taskNumber.equals("task1")){
+                            usp.setTaskNumber(2);
+                            Toast.makeText(TaskDetailsActivity.this, "taskNumber"+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
+                        }
+                        else if(taskNumber.equals("task2"))
+                        {
+                            usp.setTaskNumber(3);
+                            Toast.makeText(TaskDetailsActivity.this, "taskNumber"+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
+
+                        }
+                        else if(taskNumber.equals("task3"))
+                        {
+                            usp.setTaskNumber(1);
+                            Toast.makeText(TaskDetailsActivity.this, "taskNumber"+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
+
+                        }
+
+                        Toast.makeText(TaskDetailsActivity.this, "Completed!", Toast.LENGTH_LONG).show();
+
+                    }catch (Exception e)
+                    {
+                        Toast.makeText(TaskDetailsActivity.this, "Error adding"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.d("Error adding Balance","errrr!"+e.getMessage());
+
+                    }
+                }
+                else
+                {
+                    try{
+                        mDatabaseUserDetails.child("accStatus").setValue("Banned");
+                        adMissclicked = true;
+                        Toast.makeText(TaskDetailsActivity.this, "You've done something terrible!!", Toast.LENGTH_LONG).show();
+                        Intent intent =  new Intent(TaskDetailsActivity.this,MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+
+//                    Log.d("adopenadmissclicked","missclicked"+adMissclicked);
+                    }catch (Exception e)
+                    {
+                        Toast.makeText(TaskDetailsActivity.this, "Error "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                }
             }
         });
     }

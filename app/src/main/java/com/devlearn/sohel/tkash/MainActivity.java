@@ -520,8 +520,8 @@ public class MainActivity extends AppCompatActivity
                         Map<String, Object> task1 = new HashMap<>();
                         Map<String, Object> task2 = new HashMap<>();
                         Map<String, Object> task3 = new HashMap<>();
-                        Map<String, Object> task4 = new HashMap<>();
-                        Map<String, Object> task5 = new HashMap<>();
+                        //Map<String, Object> task4 = new HashMap<>();
+                        //Map<String, Object> task5 = new HashMap<>();
                         task1.put("imp",0);
                         task1.put("clks",0);
                         task1.put("timestamp", ServerValue.TIMESTAMP);
@@ -529,7 +529,7 @@ public class MainActivity extends AppCompatActivity
                         mDatabaseTask.child(user_id).child("task1").setValue(task1);
 
                         task2.put("imp",0);
-                        task2.put("clks",0);
+                        task2.put("clks",1);
                         task2.put("timestamp", ServerValue.TIMESTAMP);
                         task2.put("limitImp", getRandomNumberImp());
                         mDatabaseTask.child(user_id).child("task2").setValue(task2);
@@ -542,7 +542,7 @@ public class MainActivity extends AppCompatActivity
                         mDatabaseTask.child(user_id).child("task3").setValue(task3);
 
 
-                        task4.put("imp",0);
+                        /*task4.put("imp",0);
                         task4.put("clks",0);
                         task4.put("timestamp", ServerValue.TIMESTAMP);
                         task4.put("limitImp", getRandomNumberImp());
@@ -553,7 +553,7 @@ public class MainActivity extends AppCompatActivity
                         task5.put("clks",0);
                         task5.put("timestamp", ServerValue.TIMESTAMP);
                         task5.put("limitImp", getRandomNumberImp());
-                        mDatabaseTask.child(user_id).child("task5").setValue(task5);
+                        mDatabaseTask.child(user_id).child("task5").setValue(task5);*/
 
 
                         waitingDialog.dismiss();
@@ -594,7 +594,7 @@ public class MainActivity extends AppCompatActivity
 
     private int getRandomNumberImp(){
         Random rand = new Random();
-        return (25 + rand.nextInt((30 - 25) + 1));
+        return (26 + rand.nextInt((32 - 26) + 1));
 
     }
 
@@ -708,7 +708,7 @@ public class MainActivity extends AppCompatActivity
                     double version = updateLink.getVersion();
                     String url = updateLink.getUrl();
 
-                    if(version != 1.4)
+                    if(version != 1.5)
                     {
                         AlertForUpdate(url);
                     }

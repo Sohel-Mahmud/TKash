@@ -88,6 +88,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/relative"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0">
@@ -151,31 +152,8 @@
                     </RelativeLayout>
                 </LinearLayout>
             </RelativeLayout>
+
         </LinearLayout>
-
-        <!--<RelativeLayout-->
-        <!--android:layout_width="UNKNOWN_DATA_0x8c01"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="left|right|center_horizontal|fill_horizontal|center|fill|start|end"-->
-        <!--android:layout_marginLeft="10dp"-->
-        <!--android:layout_marginRight="10dp"-->
-        <!--android:layout_marginTop="20dp"-->
-        <!--android:background="@drawable/dotted_border"-->
-        <!--android:padding="10dp">-->
-
-        <!--<TextView-->
-        <!--android:id="@+id/tvTimer"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:layout_marginLeft="10dp"-->
-        <!--android:layout_marginRight="10dp"-->
-        <!--android:text="10"-->
-        <!--android:textColor="@color/colorPrimary"-->
-        <!--android:textSize="50dp"-->
-        <!--android:textStyle="bold" />-->
-        <!--</RelativeLayout>-->
 
         <Button
             android:id="@+id/btn_proceed"
@@ -197,12 +175,19 @@
             android:id="@+id/btnReset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/btn_proceed"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="180dp"
             android:text="Reset" />
+
         <TextView
             android:id="@+id/mlog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/txtInfo"
+            android:layout_below="@id/mlog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
@@ -212,7 +197,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             ads:adSize="BANNER"
-            ads:adUnitId="@string/secondBannerAdUnitId"
+            ads:adUnitId="@string/BannerTestAdUnitId"
             ads:layout_constraintBottom_toBottomOf="parent">
         </com.google.android.gms.ads.AdView>
 
