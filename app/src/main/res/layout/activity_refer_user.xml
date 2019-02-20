@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#ECEFF1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior"
+    tools:context=".ReferUser">
+    <LinearLayout
+        android:background="#fff"
+        android:orientation="vertical"
+        android:id="@+id/linearLay1"
+        android:visibility="visible"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:background="@drawable/free_ride_banner"
+            android:layout_marginTop="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textColor="#000"
+            android:padding="16dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="Invite Friends and Get Bonus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textSize="12sp"
+            android:textColor="#8c9ba5"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Share this Code with your Friends and ask them to use the code for the reward" />
+        <TextView
+            android:textSize="12sp"
+            android:textColor="#8c9ba5"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Your invitation code:" />
+
+        <RelativeLayout
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_invite_code_large"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="48dp">
+            <TextView
+                android:textSize="12sp"
+                android:textColor="#152934"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:textAlignment="center"
+                android:id="@+id/iviteCode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text=""
+                android:layout_toLeftOf="@+id/copyCode"
+                android:textAllCaps="false"
+                style="null" />
+            <TextView
+                android:textSize="15sp"
+                android:textColor="#e83d3d"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/copyCode"
+                android:textAlignment="center"
+                android:layout_width="83dp"
+                android:layout_height="match_parent"
+                android:text="Copy"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/txtReferelCodelabel"
+            android:textSize="12sp"
+            android:textColor="#8c9ba5"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Put your referrel code here:" />
+
+        <RelativeLayout
+            android:id="@+id/enterReferCodelayout"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_invite_code_large"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="48dp">
+            <EditText
+                android:maxLength="30"
+                android:textSize="12sp"
+                android:textColor="#152934"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:textAlignment="center"
+                android:id="@+id/edttextSetInviteCode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/applyCode"
+                />
+            <TextView
+                android:textSize="15sp"
+                android:textColor="#fff"
+                android:background="@color/colorAccent"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/applyCode"
+                android:textAlignment="center"
+                android:layout_width="83dp"
+                android:layout_height="match_parent"
+                android:text="Get"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+    </LinearLayout>
+    <Button
+        android:textSize="14sp"
+        android:textColor="#ffffff"
+        android:id="@+id/btnInvite"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/button_shape"
+        android:text="Invite Friends"
+        android:layout_alignParentBottom="true"
+        android:textAllCaps="true"
+        style="null" />
+</RelativeLayout>
