@@ -51,13 +51,13 @@ public class TaskActivity extends AppCompatActivity {
 
     private TaskSharedPref usp;
 
-    private ValueEventListener taskLishtenr1,taskLishtenr2, taskLishtenr3,taskLishtenr4,taskLishtenr5;
+    private ValueEventListener taskLishtenr1, taskLishtenr2, taskLishtenr3, taskLishtenr4, taskLishtenr5;
 
-    private TextView txtTaskstatus1,txtTaskstatus2,txtTaskstatus3,txtTaskstatus4,txtTaskstatus5;
+    private TextView txtTaskstatus1, txtTaskstatus2, txtTaskstatus3, txtTaskstatus4, txtTaskstatus5;
 
     CountDownTimer countDownTimer;
 
-    private CardView taskcard1, taskcard2, taskcard3, taskcard4, taskcard5, taskcard6, taskcard7, taskcard8, taskcard9, taskcard10,ipcard,resetTaskCard;
+    private CardView taskcard1, taskcard2, taskcard3, taskcard4, taskcard5, taskcard6, taskcard7, taskcard8, taskcard9, taskcard10, ipcard, resetTaskCard;
     private AdView mAdView;
 
     public UserDetails userDetails;
@@ -75,16 +75,17 @@ public class TaskActivity extends AppCompatActivity {
 
         mDatabasetask1 = FirebaseDatabase.getInstance().getReference().child("Tasks").child(user_id).child("task1");
         mDatabasetask2 = FirebaseDatabase.getInstance().getReference().child("Tasks").child(user_id).child("task2");
-//        mDatabasetask4 = FirebaseDatabase.getInstance().getReference().child("Tasks").child(user_id).child("task4");
+        mDatabasetask3 = FirebaseDatabase.getInstance().getReference().child("Tasks").child(user_id).child("task3");
 //        mDatabasetask5 = FirebaseDatabase.getInstance().getReference().child("Tasks").child(user_id).child("task5");
         taskcard1 = findViewById(R.id.taskcard1);
         taskcard2 = findViewById(R.id.taskcard2);
+        taskcard3 = findViewById(R.id.taskcard3);
         taskcard1.setEnabled(false);
         taskcard1.setBackgroundColor(Color.parseColor("#b00020"));
         taskcard2.setEnabled(false);
         taskcard2.setBackgroundColor(Color.parseColor("#b00020"));
-//        taskcard4.setEnabled(false);
-//        taskcard4.setBackgroundColor(Color.parseColor("#b00020"));
+        taskcard3.setEnabled(false);
+        taskcard3.setBackgroundColor(Color.parseColor("#b00020"));
 //        taskcard5.setEnabled(false);
 //        taskcard5.setBackgroundColor(Color.parseColor("#b00020"));
 
@@ -93,7 +94,7 @@ public class TaskActivity extends AppCompatActivity {
 
         txtTaskstatus1 = findViewById(R.id.txttaskstatus1);
         txtTaskstatus2 = findViewById(R.id.txttaskstatus2);
-//        txtTaskstatus4 = findViewById(R.id.txttaskstatus4);
+        txtTaskstatus3 = findViewById(R.id.txttaskstatus3);
 //        txtTaskstatus5 = findViewById(R.id.txttaskstatus5);
 
 
@@ -106,13 +107,11 @@ public class TaskActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(task1!=null)
-                {
+                if (task1 != null) {
                     Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
-                    intent.putExtra("task","task1");
+                    intent.putExtra("task", "task1");
                     startActivity(intent);
                 }
-
 
 
             }
@@ -121,24 +120,35 @@ public class TaskActivity extends AppCompatActivity {
         taskcard2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(task2!=null)
-                {
-                    Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
-                    intent.putExtra("task","task2");
+                if (task2 != null) {
+                    Intent intent = new Intent(TaskActivity.this, OnlyQuesActivity.class);
+                    intent.putExtra("task", "task2");
                     startActivity(intent);
                 }
 
             }
         });
 
+        taskcard3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (task3 != null) {
+                    Intent intent = new Intent(TaskActivity.this, TaskDetailsActivity.class);
+                    intent.putExtra("task", "task3");
+                    startActivity(intent);
+                }
+            }
+        });
+
     }
+
     private void bannerAdRequest() {
         AdRequest adRequest = new AdRequest.Builder()
                 .build();
         mAdView.loadAd(adRequest);
 
 
-        mAdView.setAdListener(new AdListener(){
+        mAdView.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
@@ -152,16 +162,15 @@ public class TaskActivity extends AppCompatActivity {
             @Override
             public void onAdLeftApplication() {
                 super.onAdLeftApplication();
-                try{
+                try {
                     mDatabaseUserDetails.child("accStatus").setValue("Banned");
                     Toast.makeText(TaskActivity.this, "You've done something terrible!!", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(TaskActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
-                }catch (Exception e)
-                {
-                    Toast.makeText(TaskActivity.this, "Error "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Toast.makeText(TaskActivity.this, "Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -188,6 +197,7 @@ public class TaskActivity extends AppCompatActivity {
         });
 
     }
+
     @Override
     public void onPause() {
         if (mAdView != null) {
@@ -257,7 +267,21 @@ public class TaskActivity extends AppCompatActivity {
         };
         mDatabasetask2.addListenerForSingleValueEvent(taskLishtenr2);
 
-        try{
+        taskLishtenr3 = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                task3 = dataSnapshot.getValue(TaskDetails.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                String error = databaseError.getMessage();
+                Log.d("taskthree", "error " + error);
+            }
+        };
+        mDatabasetask3.addListenerForSingleValueEvent(taskLishtenr3);
+
+        try {
             mDatabaseUserDetails.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -270,35 +294,42 @@ public class TaskActivity extends AppCompatActivity {
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                     String error = databaseError.getMessage();
-                    Toast.makeText(TaskActivity.this, "userdetailserror "+error, Toast.LENGTH_SHORT).show();
-                    Log.d("username error","error: "+error);
+                    Toast.makeText(TaskActivity.this, "userdetailserror " + error, Toast.LENGTH_SHORT).show();
+                    Log.d("username error", "error: " + error);
                 }
             });
-        }catch (Exception e)
-        {
-            Log.d("username error","error: "+e.getMessage());
+        } catch (Exception e) {
+            Log.d("username error", "error: " + e.getMessage());
 
         }
 
-        Toast.makeText(TaskActivity.this, "taskNumber "+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(TaskActivity.this, "taskNumber " + usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
 
-                    if(usp.getTaskNumber() == 1)
-                    {
-                        taskcard1.setEnabled(true);
-                        taskcard1.setBackgroundColor(Color.parseColor("#388E3C"));
-                        taskcard2.setEnabled(false);
-                        taskcard2.setBackgroundColor(Color.parseColor("#b00020"));
+        if (usp.getTaskNumber() == 1) {
+            taskcard1.setEnabled(true);
+            taskcard1.setBackgroundColor(Color.parseColor("#388E3C"));
+            taskcard2.setEnabled(false);
+            taskcard2.setBackgroundColor(Color.parseColor("#b00020"));
+            taskcard3.setEnabled(false);
+            taskcard3.setBackgroundColor(Color.parseColor("#b00020"));
 
-                    }
-                    else if(usp.getTaskNumber() == 2)
-                    {
+        } else if (usp.getTaskNumber() == 2) {
 
-                        taskcard1.setEnabled(false);
-                        taskcard1.setBackgroundColor(Color.parseColor("#b00020"));
-                        taskcard2.setEnabled(true);
-                        taskcard2.setBackgroundColor(Color.parseColor("#388E3C"));
+            taskcard1.setEnabled(false);
+            taskcard1.setBackgroundColor(Color.parseColor("#b00020"));
+            taskcard2.setEnabled(true);
+            taskcard2.setBackgroundColor(Color.parseColor("#388E3C"));
+            taskcard3.setEnabled(false);
+            taskcard3.setBackgroundColor(Color.parseColor("#b00020"));
 
-                    }
+        } else if (usp.getTaskNumber() == 3) {
+            taskcard1.setEnabled(false);
+            taskcard1.setBackgroundColor(Color.parseColor("#b00020"));
+            taskcard2.setEnabled(false);
+            taskcard2.setBackgroundColor(Color.parseColor("#b00020"));
+            taskcard3.setEnabled(true);
+            taskcard3.setBackgroundColor(Color.parseColor("#388E3C"));
+        }
 
     }
 
@@ -306,11 +337,11 @@ public class TaskActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        if(taskLishtenr1!=null && taskLishtenr2!=null && mAdView!=null)
-        {
+        if (taskLishtenr1 != null && taskLishtenr2 != null && taskLishtenr3 != null && mAdView != null) {
             mAdView.destroy();
             mDatabasetask1.removeEventListener(taskLishtenr1);
             mDatabasetask2.removeEventListener(taskLishtenr2);
+            mDatabasetask3.removeEventListener(taskLishtenr3);
         }
 
     }

@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
+            android:background="@drawable/free_ride_banner"
             android:layout_marginTop="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -25,7 +26,7 @@
             android:padding="16dp"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="Invite Friends and Get Bonus"
+            android:text="@string/inviteHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <TextView
@@ -35,7 +36,7 @@
             android:paddingRight="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Share this Code with your Friends and ask them to use the code for the reward" />
+            android:text="@string/inviteDetails" />
         <TextView
             android:textSize="12sp"
             android:textColor="#8c9ba5"
@@ -44,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Your invitation code:" />
+            android:text="@string/myReferCode" />
 
         <RelativeLayout
             android:layout_marginLeft="16dp"
@@ -87,7 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="Put your referrel code here:" />
+            android:text="@string/referCodePasteHeader" />
 
         <RelativeLayout
             android:id="@+id/enterReferCodelayout"

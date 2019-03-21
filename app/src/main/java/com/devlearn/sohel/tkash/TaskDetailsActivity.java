@@ -99,6 +99,9 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
     private TextView mlog;
     private double estimatedServerTimeMs;
 
+    private static double PENNY_AD = 1.0;
+    private static int INCREMENT_AD = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,8 +116,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
         mDatabaseUserDetails = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
         mlog = findViewById(R.id.mlog);
 
-        MobileAds.initialize(this,getString(R.string.admobTestId));
-//        MobileAds.initialize(this,"ca-app-pub-3940256099942544/5224354917");
+        MobileAds.initialize(this,getString(R.string.admobAppId));
 
         mAdView = findViewById(R.id.adViewInTask);
 
@@ -221,7 +223,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                         interstitialAd.show();
                         if(questions<impLimit && !adMissclicked)
                         {
-                            int finalImpression = questions+1;
+                            int finalImpression = questions+INCREMENT_AD;
                             mDatabasetask.child("imp").setValue(finalImpression);
                             Toast.makeText(TaskDetailsActivity.this, "counted!!!", Toast.LENGTH_SHORT).show();
 
@@ -229,13 +231,11 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                     }
                     else
                     {
-//                        startActivity(new Intent(TaskDetailsActivity.this, TaskProcess.class));
                         Snackbar.make(taskDetailslayout, "Couldn't Load the Data and Verifier", Snackbar.LENGTH_LONG)
                                 .show();
                         interstitialAd.loadAd(new AdRequest.Builder().build());
 
                     }
-//                    finish();
                 }
             }
         });
@@ -250,8 +250,6 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                 }
                 else
                 {
-//                    Snackbar.make(taskDetailslayout, "Can't load the video, try again!", Snackbar.LENGTH_LONG)
-//                            .show();
                     resetTasks();
                 }
 
@@ -361,7 +359,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
     private void loadRewardedVideo() {
         if(!mRewardedVideoAd.isLoaded())
         {
-            mRewardedVideoAd.loadAd(getString(R.string.TestRewardVideoID),
+            mRewardedVideoAd.loadAd(getString(R.string.RewardVideo),
                     new AdRequest.Builder().build());
 
         }
@@ -386,13 +384,13 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
     }
     private int getRandomNumberTime(){
         Random rand = new Random();
-        return (5 + rand.nextInt((6 - 5) + 1));
+        return (100 + rand.nextInt((130 - 100) + 1));
 
     }
 
     private void loadInterstitial() {
         interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId(getString(R.string.InterstitialTest));
+        interstitialAd.setAdUnitId(getString(R.string.InterstitialAd));
         interstitialAd.loadAd(new AdRequest.Builder().build());
 
         interstitialAd.setAdListener(new AdListener(){
@@ -415,9 +413,9 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                 Escaped = true;
                 if(questions==impLimit && clks == 0)
                 {
-                    final int finalClicks = clks+1;
+                    final int finalClicks = clks+INCREMENT_AD;
 
-                    countDownTimer2 = new CountDownTimer(17000,1000) {
+                    countDownTimer2 = new CountDownTimer(30000,1000) {
                         @Override
                         public void onTick(long millisUntilFinished) {
 
@@ -429,7 +427,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                         try{
                         cutoff = new Date().getTime() + TimeUnit.MILLISECONDS.convert(getRandomNumberTime(), TimeUnit.MINUTES);
                         Log.d("Getlong","cutoff "+cutoff);
-                        double addBalance = currentBalance+1;
+                        double addBalance = currentBalance+PENNY_AD;
                         mDatabasetask.child("clks").setValue(finalClicks);
                         mDatabasetask.child("timestamp").setValue(cutoff);
                         mDatabaseUserDetails.child("currentBalance").setValue(addBalance);
@@ -439,6 +437,12 @@ public class TaskDetailsActivity extends AppCompatActivity implements RewardedVi
                             Toast.makeText(TaskDetailsActivity.this, "taskNumber"+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
                         }
                         else if(taskNumber.equals("task2"))
+                        {
+                            usp.setTaskNumber(3);
+                            Toast.makeText(TaskDetailsActivity.this, "taskNumber"+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();
+
+                        }
+                        else if(taskNumber.equals("task3"))
                         {
                             usp.setTaskNumber(1);
                             Toast.makeText(TaskDetailsActivity.this, "taskNumber"+usp.getTaskNumber(), Toast.LENGTH_SHORT).show();

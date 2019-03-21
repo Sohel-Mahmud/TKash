@@ -3,6 +3,7 @@ package com.devlearn.sohel.tkash;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity
     private String username, usernumber, accStatus;
     public String user_id;
 
-    private String numberProvider,withdrawStatus, withdrawNumber;
+    private String numberProvider, withdrawStatus, withdrawNumber;
     private int selectedId = -1;
     private int selectedId2 = -1;
     private double withdrawAmount;
@@ -111,9 +112,12 @@ public class MainActivity extends AppCompatActivity
 
 
     //public IPCheck ipCheck;
-    private String country="Bangladesh", ip;
+    private String country = "Bangladesh", ip;
     private String url;
     private RequestQueue queue;
+    private static double VERSION_CODE = 1.55;
+    private double version;
+    private String url1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +125,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -132,18 +135,16 @@ public class MainActivity extends AppCompatActivity
         mDatabaseWithdraw = FirebaseDatabase.getInstance().getReference().child("Withdraws").child(user_id);
         mDatabaseWelcome = FirebaseDatabase.getInstance().getReference().child("WelcomeText").child("text");
 
-        txtusername = (TextView)findViewById(R.id.username);
+        txtusername = (TextView) findViewById(R.id.username);
         txtuserNumber = findViewById(R.id.userNumber);
-        txtcurrentBalance = (TextView)findViewById(R.id.currentBalance);
-        txtAccStatus = (TextView)findViewById(R.id.txtAccStatus);
+        txtcurrentBalance = (TextView) findViewById(R.id.currentBalance);
+        txtAccStatus = (TextView) findViewById(R.id.txtAccStatus);
         txtipdetails = findViewById(R.id.ipdetails);
         marque = findViewById(R.id.bannerMarque);
         marque.setSelected(true);
         queue = Volley.newRequestQueue(this);
 
-        mainGrid = (android.support.v7.widget.GridLayout)findViewById(R.id.mainGrid);
-
-
+        mainGrid = (android.support.v7.widget.GridLayout) findViewById(R.id.mainGrid);
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -174,7 +175,7 @@ public class MainActivity extends AppCompatActivity
                 country = response.getCountry();
                 String city = response.getCity();
 
-                txtipdetails.setText(country+", "+city);
+                txtipdetails.setText(country + ", " + city);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -193,24 +194,24 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onResponse(String response) {
 
-                String newResponse="";
-                for(int i=0; i<response.length(); i++){
-                    if(response.charAt(i)==','){
+                String newResponse = "";
+                for (int i = 0; i < response.length(); i++) {
+                    if (response.charAt(i) == ',') {
                         break;
                     }
-                    newResponse = newResponse+response.charAt(i);
+                    newResponse = newResponse + response.charAt(i);
                 }
-                url = "http://ip-api.com/json/" +newResponse;
+                url = "http://ip-api.com/json/" + newResponse;
 //                    Log.d("actuallink","link: "+url);
-                    ip=newResponse;
+                ip = newResponse;
                 getIPDetails(url);
 
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("vollyerror 1",error.getMessage());
-                Toast.makeText(MainActivity.this, "IP error "+error.getMessage(), Toast.LENGTH_LONG).show();
+                Log.d("vollyerror 1", error.getMessage());
+                Toast.makeText(MainActivity.this, "IP error " + error.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
@@ -222,13 +223,13 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void getIPInformation(){
+    private void getIPInformation() {
         String url = "https://ipapi.co/json";
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null,  new Response.Listener<JSONObject>() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("JSON", "onResponse: "+response.toString());
+                Log.d("JSON", "onResponse: " + response.toString());
 //                try {
 ////                    country =  response.getString("country_name");
 ////                    ip = response.getString("ip");
@@ -241,10 +242,10 @@ public class MainActivity extends AppCompatActivity
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("vollyerror 2",error.getMessage());
+                Log.d("vollyerror 2", error.getMessage());
 //                Toast.makeText(MainActivity.this, "IP error "+error.getMessage(), Toast.LENGTH_LONG).show();
             }
-        }){
+        }) {
             @Override
             protected VolleyError parseNetworkError(VolleyError volleyError) {
                 if (volleyError.networkResponse != null && volleyError.networkResponse.data != null) {
@@ -262,7 +263,7 @@ public class MainActivity extends AppCompatActivity
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("JSON", "onResponse: "+response.toString());
+                Log.d("JSON", "onResponse: " + response.toString());
 //                try {
 ////                    country =  response.getString("country_name");
 ////                    ip = response.getString("ip");
@@ -275,10 +276,10 @@ public class MainActivity extends AppCompatActivity
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("vollyerror 2",error.getMessage());
+                Log.d("vollyerror 2", error.getMessage());
 //                Toast.makeText(MainActivity.this, "IP error "+error.getMessage(), Toast.LENGTH_LONG).show();
             }
-        }){
+        }) {
             @Override
             protected VolleyError parseNetworkError(VolleyError volleyError) {
                 if (volleyError.networkResponse != null && volleyError.networkResponse.data != null) {
@@ -297,35 +298,29 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
     private void setSingleEvent(GridLayout mainGrid) {
 
         //loop all child item for Main Grid
-        for(int i=0; i<mainGrid.getChildCount(); i++)
-        {
+        for (int i = 0; i < mainGrid.getChildCount(); i++) {
             //all child items are cardview so cast object to cardview
-            CardView cardView = (CardView)mainGrid.getChildAt(i);
+            CardView cardView = (CardView) mainGrid.getChildAt(i);
             final int finalI = i;
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //here set activity for those i;
-                    if(finalI == 1)
-                    {
+                    if (finalI == 1) {
+
                         checkTaskAvailability();
+
+
 //                        startActivity(new Intent(MainActivity.this, TaskActivity.class));
 
-                    }
-                    else if(finalI == 2)
-                    {
+                    } else if (finalI == 2) {
                         startActivity(new Intent(MainActivity.this, WithdrawHistoryActivity.class));
-                    }
-                    else if(finalI == 3)
-                    {
+                    } else if (finalI == 3) {
                         alertDialog();
-                    }
-                    else if(finalI == 0)
-                    {
+                    } else if (finalI == 0) {
                         infoDetailsAlertDialog();
                     }
 
@@ -339,7 +334,7 @@ public class MainActivity extends AppCompatActivity
         dialog.setTitle(getString(R.string.textline6));
 
         LayoutInflater inflater = LayoutInflater.from(this);
-        View layout_information = inflater.inflate(R.layout.layout_information,null);
+        View layout_information = inflater.inflate(R.layout.layout_information, null);
         dialog.setView(layout_information);
         dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
@@ -374,17 +369,14 @@ public class MainActivity extends AppCompatActivity
                 RadioButton provider = radioProvider.findViewById(selectedId);
 
 
-                if((selectedId != -1) && (!TextUtils.isEmpty(edtWithdrawNumber.getText().toString())) && (!TextUtils.isEmpty(edtWithdrawAmount.getText().toString())))
-                {
+                if ((selectedId != -1) && (!TextUtils.isEmpty(edtWithdrawNumber.getText().toString())) && (!TextUtils.isEmpty(edtWithdrawAmount.getText().toString()))) {
                     numberProvider = provider.getText().toString();
                     withdrawNumber = edtWithdrawNumber.getText().toString();
                     withdrawAmount = Double.valueOf(edtWithdrawAmount.getText().toString());
 
                     //Toast.makeText(MainActivity.this, "Success!!"+numberProvider+" "+withdrawNumber+selectedId+" "+selectedId2+"Amount "+withdrawAmount, Toast.LENGTH_SHORT).show();
                     postWithdrawRequest(numberProvider, withdrawNumber, withdrawAmount);
-                }
-                else
-                {
+                } else {
                     Toast.makeText(MainActivity.this, "Please Provide all the information", Toast.LENGTH_SHORT).show();
 
                 }
@@ -404,8 +396,7 @@ public class MainActivity extends AppCompatActivity
 
     private void postWithdrawRequest(String numberProvider, String withdrawNumber, double withdrawAmount) {
 
-        if((numberProvider.equals("Mobile Recharge")) && (currentBalance>= withdrawAmount) && (withdrawAmount >=21))
-        {
+        if ((numberProvider.equals("Mobile Recharge")) && (currentBalance >= withdrawAmount) && (withdrawAmount >= 21)) {
             Toast.makeText(this, "Correct withdraw", Toast.LENGTH_SHORT).show();
             waitingDialog = new SpotsDialog(MainActivity.this);
             waitingDialog.show();
@@ -431,14 +422,11 @@ public class MainActivity extends AppCompatActivity
                 public void onFailure(@NonNull Exception e) {
                     waitingDialog.dismiss();
                     String error = e.getMessage();
-                    Toast.makeText(MainActivity.this, "Error! "+error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Error! " + error, Toast.LENGTH_SHORT).show();
                 }
             });
 
-        }
-
-        else if((numberProvider.equals("bKash") || numberProvider.equals("Rocket")) && (currentBalance>= withdrawAmount) && (withdrawAmount >=105))
-        {
+        } else if ((numberProvider.equals("bKash") || numberProvider.equals("Rocket")) && (currentBalance >= withdrawAmount) && (withdrawAmount >= 105)) {
             Toast.makeText(this, "Correct withdraw", Toast.LENGTH_SHORT).show();
             waitingDialog = new SpotsDialog(MainActivity.this);
             waitingDialog.show();
@@ -453,24 +441,22 @@ public class MainActivity extends AppCompatActivity
             final DatabaseReference newPost = mDatabaseWithdraw.push();
 
             newPost.setValue(withdraw).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                waitingDialog.dismiss();
-                startActivity(new Intent(MainActivity.this, WithdrawHistoryActivity.class));
+                @Override
+                public void onSuccess(Void aVoid) {
+                    waitingDialog.dismiss();
+                    startActivity(new Intent(MainActivity.this, WithdrawHistoryActivity.class));
 
-            }
+                }
             }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        waitingDialog.dismiss();
-                        String error = e.getMessage();
-                        Toast.makeText(MainActivity.this, "Error! "+error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    waitingDialog.dismiss();
+                    String error = e.getMessage();
+                    Toast.makeText(MainActivity.this, "Error! " + error, Toast.LENGTH_SHORT).show();
+                }
+            });
 
-        }
-        else
-        {
+        } else {
 //            waitingDialog.dismiss();
 //            startActivity(new Intent(MainActivity.this, WithdrawHistoryActivity.class));
 //            finish();
@@ -488,58 +474,50 @@ public class MainActivity extends AppCompatActivity
         waitingDialog = new SpotsDialog(MainActivity.this);
         waitingDialog.show();
 
-        if(userDetails == null)
-        {
+        if (userDetails == null) {
             waitingDialog.dismiss();
             alertDialogForNoInternet();
-        }
-        else if(!userDetails.accStatus.equals("active"))
-        {
+        } else if (version != VERSION_CODE) {
+            AlertForUpdate(url1);
+        } else if (!userDetails.accStatus.equals("active")) {
             waitingDialog.dismiss();
             alertDialogForBanned();
-        }
-        else if(!country.equals("Bangladesh"))
-        {
+        } else if (!country.equals("Bangladesh")) {
             waitingDialog.dismiss();
             alertDialogForUsingVPN();
-        }
-        else
-        {
+        } else {
             ValueEventListener mValueEventListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.hasChild(user_id))
-                    {
+                    if (dataSnapshot.hasChild(user_id)) {
                         waitingDialog.dismiss();
                         startActivity(new Intent(MainActivity.this, TaskActivity.class));
 
 
-                    }
-                    else
-                    {
+                    } else {
                         Map<String, Object> task1 = new HashMap<>();
                         Map<String, Object> task2 = new HashMap<>();
-                        //Map<String, Object> task3 = new HashMap<>();
+                        Map<String, Object> task3 = new HashMap<>();
                         //Map<String, Object> task4 = new HashMap<>();
                         //Map<String, Object> task5 = new HashMap<>();
-                        task1.put("imp",0);
-                        task1.put("clks",0);
+                        task1.put("imp", 0);
+                        task1.put("clks", 0);
                         task1.put("timestamp", ServerValue.TIMESTAMP);
                         task1.put("limitImp", getRandomNumberImp());
                         mDatabaseTask.child(user_id).child("task1").setValue(task1);
 
-                        task2.put("imp",0);
-                        task2.put("clks",0);
+                        task2.put("imp", 0);
+                        task2.put("clks", 0);
                         task2.put("timestamp", ServerValue.TIMESTAMP);
                         task2.put("limitImp", getRandomNumberImp());
                         mDatabaseTask.child(user_id).child("task2").setValue(task2);
 
 
-//                        task3.put("imp",0);
-//                        task3.put("clks",0);
-//                        task3.put("timestamp", ServerValue.TIMESTAMP);
-//                        task3.put("limitImp", getRandomNumberImp());
-//                        mDatabaseTask.child(user_id).child("task3").setValue(task3);
+                        task3.put("imp", 0);
+                        task3.put("clks", 0);
+                        task3.put("timestamp", ServerValue.TIMESTAMP);
+                        task3.put("limitImp", getRandomNumberImp());
+                        mDatabaseTask.child(user_id).child("task3").setValue(task3);
 
 
                         /*task4.put("imp",0);
@@ -582,17 +560,16 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     String error = databaseError.getMessage();
-                    Log.d("taskerror","error "+error);
+                    Log.d("taskerror", "error " + error);
                 }
             };
             mDatabaseTask.addListenerForSingleValueEvent(mValueEventListener);
         }
 
 
-
     }
 
-    private int getRandomNumberImp(){
+    private int getRandomNumberImp() {
         Random rand = new Random();
         return (26 + rand.nextInt((32 - 26) + 1));
 
@@ -606,7 +583,7 @@ public class MainActivity extends AppCompatActivity
                 .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                       MainActivity.this.finish();
+                        MainActivity.this.finish();
                     }
                 });
         usingVPN.show();
@@ -645,14 +622,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        try{
+        try {
 
             mDatabaseWelcome.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     String emote = String.valueOf(Character.toChars(0x1F609));
                     String text = (String) dataSnapshot.getValue();
-                    marque.setText(text+" "+emote);
+                    marque.setText(text + " " + emote);
                 }
 
                 @Override
@@ -661,18 +638,16 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
 
         }
-        try{
+        try {
             mDatabaseUserDetails.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     userDetails = dataSnapshot.getValue(UserDetails.class);
 
-                    if(userDetails!=null)
-                    {
+                    if (userDetails != null) {
                         username = userDetails.userName;
                         usernumber = userDetails.userPhone;
                         currentBalance = userDetails.currentBalance;
@@ -690,27 +665,25 @@ public class MainActivity extends AppCompatActivity
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                     String error = databaseError.getMessage();
-                    Toast.makeText(MainActivity.this, "userdetailserror "+error, Toast.LENGTH_SHORT).show();
-                    Log.d("username error","error: "+error);
+                    Toast.makeText(MainActivity.this, "userdetailserror " + error, Toast.LENGTH_SHORT).show();
+                    Log.d("username error", "error: " + error);
                 }
             });
-        }catch (Exception e)
-        {
-            Log.d("username error","error: "+e.getMessage());
+        } catch (Exception e) {
+            Log.d("username error", "error: " + e.getMessage());
 
         }
-        try{
+        try {
             DatabaseReference updateCheck = FirebaseDatabase.getInstance().getReference().child("UpdateFile");
             updateCheck.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     updateLink = dataSnapshot.getValue(UpdateLink.class);
-                    double version = updateLink.getVersion();
-                    String url = updateLink.getUrl();
+                    version = updateLink.getVersion();
+                    url1 = updateLink.getUrl();
 
-                    if(version != 1.5)
-                    {
-                        AlertForUpdate(url);
+                    if (version != VERSION_CODE) {
+                        AlertForUpdate(url1);
                     }
                 }
 
@@ -719,9 +692,8 @@ public class MainActivity extends AppCompatActivity
 
                 }
             });
-        }catch (Exception e)
-        {
-            Toast.makeText(this, "UpdateError"+ e.getMessage(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "UpdateError" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         //GetIp();
         GetIpInfo();
@@ -743,7 +715,6 @@ public class MainActivity extends AppCompatActivity
         updateDialog.show();
 
     }
-
 
 
     @Override
@@ -806,20 +777,19 @@ public class MainActivity extends AppCompatActivity
                 i.setType("text/plain");
                 i.putExtra(Intent.EXTRA_SUBJECT, "TKash");
                 String sAux = "\nLet me recommend you this application\n\n";
-                sAux = sAux + updateLink.getUrl() ;
+                sAux = sAux + updateLink.getUrl();
                 i.putExtra(Intent.EXTRA_TEXT, sAux);
                 startActivity(Intent.createChooser(i, "choose one"));
-            } catch(Exception e) {
+            } catch (Exception e) {
                 //e.toString();
-                Toast.makeText(this, "Error "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
-        }else if(id == R.id.nav_refer){
-            if(userDetails == null){
+        } else if (id == R.id.nav_refer) {
+            if (userDetails == null) {
                 alertDialogForNoInternet();
-            }
-            else if( !userDetails.accStatus.equals("active")){
+            } else if (!userDetails.accStatus.equals("active")) {
                 alertDialogForBanned();
-            }else{
+            } else {
                 startActivity(new Intent(MainActivity.this, ReferUser.class));
             }
         }

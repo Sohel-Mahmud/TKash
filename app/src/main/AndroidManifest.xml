@@ -17,7 +17,8 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/TestAdmobID"/>
+            android:value="@string/admobAppId" />
+
         <activity
             android:name=".SplashActivity"
             android:screenOrientation="portrait">
@@ -53,7 +54,8 @@
         <activity
             android:name=".TestIP"
             android:screenOrientation="portrait" />
-        <activity android:name=".ReferUser"></activity>
+        <activity android:name=".ReferUser" />
+        <activity android:name=".OnlyQuesActivity"></activity>
     </application>
 
 </manifest>

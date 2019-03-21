@@ -76,6 +76,26 @@
                 android:text="@string/textline13"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+            <TextView
+                android:layout_marginBottom="2dp"
+                android:text="@string/textline14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_marginBottom="2dp"
+                android:text="@string/textline15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_marginBottom="2dp"
+                android:text="@string/textline16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_marginBottom="2dp"
+                android:text="@string/textline17"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
